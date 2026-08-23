@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f0c29"/>
+      <stop offset="45%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff9a3c" stop-opacity="0.5"/>
+      <stop offset="45%" stop-color="#ff6a3c" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ff6a3c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowBlue" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3ec6ff" stop-opacity="0.45"/>
+      <stop offset="45%" stop-color="#3e9bff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#3e9bff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffd86f"/>
+      <stop offset="55%" stop-color="#ff9a3c"/>
+      <stop offset="100%" stop-color="#ff5f6d"/>
+    </linearGradient>
+    <linearGradient id="keyHot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffb347"/>
+      <stop offset="100%" stop-color="#ff6a3c"/>
+    </linearGradient>
+    <linearGradient id="keyBlue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5ee7ff"/>
+      <stop offset="100%" stop-color="#3e9bff"/>
+    </linearGradient>
+    <filter id="blur24" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+    <filter id="blur8" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <pattern id="keys" width="92" height="64" patternUnits="userSpaceOnUse">
+      <rect x="6" y="6" width="80" height="52" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <circle cx="640" cy="330" r="360" fill="url(#glow)"/>
+  <circle cx="1040" cy="340" r="300" fill="url(#glowBlue)" opacity="0.7"/>
+
+  <!-- keyboard wall -->
+  <rect x="0" y="400" width="1280" height="240" fill="url(#keys)"/>
+  <rect x="0" y="400" width="1280" height="240" fill="rgba(0,0,0,0.28)"/>
+
+  <!-- lit keys -->
+  <g filter="url(#blur8)">
+    <rect x="452" y="416" width="80" height="52" rx="10" fill="url(#keyHot)" opacity="0.55"/>
+    <rect x="552" y="420" width="80" height="52" rx="10" fill="url(#keyBlue)" opacity="0.5"/>
+    <rect x="652" y="416" width="80" height="52" rx="10" fill="url(#keyHot)" opacity="0.5"/>
+    <rect x="884" y="422" width="80" height="52" rx="10" fill="url(#keyBlue)" opacity="0.45"/>
+  </g>
+  <g>
+    <rect x="452" y="416" width="80" height="52" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <rect x="552" y="420" width="80" height="52" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <rect x="652" y="416" width="80" height="52" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <rect x="884" y="422" width="80" height="52" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+  </g>
+
+  <!-- typing scene on the right (composer line + caret + flame) -->
+  <rect x="826" y="428" width="150" height="12" rx="6" fill="rgba(255,255,255,0.3)"/>
+  <rect x="990" y="420" width="20" height="68" rx="10" fill="url(#keyHot)" filter="url(#blur8)" opacity="0.7"/>
+  <rect x="996" y="426" width="8" height="56" rx="4" fill="#ffffff"/>
+  <g fill="url(#keyHot)">
+    <circle cx="1000" cy="408" r="6" opacity="0.85"/>
+    <circle cx="978" cy="392" r="4.5" opacity="0.7"/>
+    <circle cx="1024" cy="388" r="5" opacity="0.7"/>
+    <circle cx="962" cy="370" r="3.5" opacity="0.55"/>
+    <circle cx="1032" cy="358" r="4" opacity="0.5"/>
+    <circle cx="984" cy="348" r="3" opacity="0.45"/>
+    <circle cx="1014" cy="336" r="3.5" opacity="0.4"/>
+    <circle cx="958" cy="332" r="2.5" opacity="0.35"/>
+    <circle cx="1042" cy="322" r="3" opacity="0.3"/>
+  </g>
+
+  <!-- title -->
+  <text x="640" y="118" text-anchor="middle" font-family="Inter, -apple-system, Segoe UI, sans-serif" font-size="28" font-weight="600" letter-spacing="6" fill="rgba(255,255,255,0.72)">DEEPSHARK · HARNESS</text>
+  <text x="644" y="222" text-anchor="middle" font-family="Inter, -apple-system, Segoe UI, sans-serif" font-size="96" font-weight="800" letter-spacing="2" fill="url(#titleGrad)">dsh-vibe</text>
+  <text x="640" y="270" text-anchor="middle" font-family="Inter, -apple-system, Segoe UI, sans-serif" font-size="26" font-weight="500" fill="rgba(255,255,255,0.9)">为输入过程增添氛围</text>
+  <text x="640" y="300" text-anchor="middle" font-family="Inter, -apple-system, Segoe UI, sans-serif" font-size="17" font-weight="400" fill="rgba(255,255,255,0.55)">Typing ambiance plugin for DeepSeek Harness</text>
+
+  <!-- feature chips -->
+  <g font-family="Inter, -apple-system, Segoe UI, sans-serif" font-size="15" font-weight="600" fill="rgba(255,255,255,0.9)">
+    <rect x="378" y="328" width="92" height="34" rx="17" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+    <text x="424" y="350" text-anchor="middle">键盘可视化</text>
+    <rect x="486" y="328" width="92" height="34" rx="17" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+    <text x="532" y="350" text-anchor="middle">小动物</text>
+    <rect x="594" y="328" width="92" height="34" rx="17" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+    <text x="640" y="350" text-anchor="middle">打字火焰</text>
+    <rect x="702" y="328" width="92" height="34" rx="17" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+    <text x="748" y="350" text-anchor="middle">输入抖动</text>
+    <rect x="810" y="328" width="92" height="34" rx="17" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+    <text x="856" y="350" text-anchor="middle">回答反馈</text>
+  </g>
+</svg>

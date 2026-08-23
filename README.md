@@ -1,6 +1,22 @@
 # dsh-vibe
 
+<div align="center">
+
+<img src="assets/cover.svg" alt="dsh-vibe 封面" width="100%" />
+
+</div>
+
 DeepSeek Harness (DSH) 输入氛围插件：在输入框上方展示一块 87 键 TKL 键盘 + 鼠标并实时高亮按键与鼠标操作，打字时喷火焰粒子、输入框轻震，AI 回答完成时播放提示音并整页轻震。
+
+<div align="center">
+
+![License](https://img.shields.io/github/license/lhf6623/dsh-vibe)
+![version](https://img.shields.io/github/package-json/v/lhf6623/dsh-vibe)
+![last commit](https://img.shields.io/github/last-commit/lhf6623/dsh-vibe)
+![stars](https://img.shields.io/github/stars/lhf6623/dsh-vibe)
+![Harness plugin](https://img.shields.io/badge/Harness--plugin-orange)
+
+</div>
 
 ## ✨ 功能
 
