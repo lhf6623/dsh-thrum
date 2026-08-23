@@ -19,6 +19,7 @@
     "build:host": "vite build --config vite.host.config.ts",
     "build:client": "vite build --config vite.client.config.ts",
     "watch": "vite build --watch --config vite.client.config.ts",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write ."
   },
   "devDependencies": {

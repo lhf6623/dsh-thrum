@@ -11,8 +11,18 @@ import {
 } from "@/shared/config";
 
 // —— 枚举值/类型：唯一真源在 src/shared/config.ts，这里仅再导出以保持对外接口（"." 入口）不变 ——
-export { SHAKE_LEVELS, MOLE_FREQUENCIES } from "@/shared/config";
-export type { ShakeLevel, MoleFrequency } from "@/shared/config";
+export {
+  SHAKE_LEVELS,
+  MOLE_FREQUENCIES,
+  FLAME_STYLES,
+  SOUND_STYLES,
+} from "@/shared/config";
+export type {
+  ShakeLevel,
+  MoleFrequency,
+  FlameStyle,
+  SoundStyle,
+} from "@/shared/config";
 
 export const name = pluginName();
 

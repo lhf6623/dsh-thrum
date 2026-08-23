@@ -31,6 +31,14 @@ const zh: Record<string, string> = {
   "option.strong": "强",
   "option.low": "低",
   "option.high": "高",
+  "option.ember": "火星",
+  "option.blue": "蓝焰",
+  "option.spark": "花火",
+  "option.ding": "叮",
+  "option.chime": "风铃",
+  "option.pop": "泡泡",
+  "feedback.flame.desc": "打字光标处喷出的粒子样式；「关」=不显示",
+  "response.sound.desc": "回答完成时的提示音；「关」=不播放",
 };
 
 const en: Record<string, string> = {
@@ -51,6 +59,14 @@ const en: Record<string, string> = {
   "option.strong": "Strong",
   "option.low": "Low",
   "option.high": "High",
+  "option.ember": "Ember",
+  "option.blue": "Blue",
+  "option.spark": "Spark",
+  "option.ding": "Ding",
+  "option.chime": "Chime",
+  "option.pop": "Pop",
+  "feedback.flame.desc": "Particle style at the typing caret; Off = hidden",
+  "response.sound.desc": "Sound when an answer finishes; Off = silent",
 };
 
 let service: LocaleService | null = null;

@@ -5,16 +5,16 @@
 #         name: 'dsh-vibe'
 #         config:
 #           enabled: true
-#           flame: true
-#           shake: light
-#           sound: true
+#           flame: ember   # 打字火焰（off / ember / blue / spark）；off=不显示
+#           shake: light   # 输入抖动（off / light / medium / strong）
+#           sound: ding    # 回答提示音（off / ding / chime / pop）；off=不播放
 #           opacity: 0.6
 - insert:
     - id: vibe
       name: "dsh-vibe"
       config:
         enabled: true
-        flame: true
+        flame: ember
         shake: off
-        sound: true
+        sound: ding
         opacity: 0.5

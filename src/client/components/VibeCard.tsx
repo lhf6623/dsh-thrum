@@ -92,6 +92,18 @@ const MOLE_OPTION_KEYS = [
   { value: "medium", labelKey: "option.medium" },
   { value: "high", labelKey: "option.high" },
 ];
+const FLAME_OPTION_KEYS = [
+  { value: "off", labelKey: "option.off" },
+  { value: "ember", labelKey: "option.ember" },
+  { value: "blue", labelKey: "option.blue" },
+  { value: "spark", labelKey: "option.spark" },
+];
+const SOUND_OPTION_KEYS = [
+  { value: "off", labelKey: "option.off" },
+  { value: "ding", labelKey: "option.ding" },
+  { value: "chime", labelKey: "option.chime" },
+  { value: "pop", labelKey: "option.pop" },
+];
 
 const GROUPS: GroupDef[] = [
   {
@@ -121,7 +133,13 @@ const GROUPS: GroupDef[] = [
     master: "feedback",
     titleKey: "group.typing",
     fields: [
-      { key: "flame", titleKey: "feedback.flame.label", type: "checkbox" },
+      {
+        key: "flame",
+        titleKey: "feedback.flame.label",
+        descKey: "feedback.flame.desc",
+        type: "select",
+        options: FLAME_OPTION_KEYS,
+      },
       {
         key: "shake",
         titleKey: "feedback.shake.label",
@@ -144,7 +162,9 @@ const GROUPS: GroupDef[] = [
       {
         key: "sound",
         titleKey: "response.sound.label",
-        type: "checkbox",
+        descKey: "response.sound.desc",
+        type: "select",
+        options: SOUND_OPTION_KEYS,
         last: true,
       },
     ],

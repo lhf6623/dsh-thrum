@@ -53,7 +53,9 @@ export function useComposerPosition(): {
       // 宽度同样视作足够宽（显示完整键盘），避免误隐藏。
       const l = Math.round(window.innerWidth / 2);
       setLeft((prev) => (prev === l ? prev : l));
-      setWidth((prev) => (prev === window.innerWidth ? prev : window.innerWidth));
+      setWidth((prev) =>
+        prev === window.innerWidth ? prev : window.innerWidth,
+      );
     }
     let rafId: number | null = null;
     function scheduleMeasure() {

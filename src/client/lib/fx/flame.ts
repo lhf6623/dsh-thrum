@@ -1,5 +1,6 @@
 import { reducedMotion } from './motion'
 import { getConfig } from '../config'
+import type { FlameStyle } from '@/shared/config'
 import { computeCaretPosition, disposeCaret } from '../caret'
 import { onComposerInput } from '../events/composer-input'
 
@@ -11,6 +12,67 @@ interface Particle {
   life: number
   decay: number
   size: number
+  spec: FlameSpec
+}
+
+// 火焰样式 -> 粒子参数（与 FLAME_STYLES 一一对应）；缺省回退 ember。
+interface FlameSpec {
+  hueBase: number
+  hueRange: number
+  sat: number
+  lightBase: number
+  lightRange: number
+  count: number
+  sizeMul: number
+  speedMul: number
+  decayMul: number
+}
+
+const FLAME_SPECS: Record<FlameStyle, FlameSpec> = {
+  off: {
+    hueBase: 0,
+    hueRange: 0,
+    sat: 0,
+    lightBase: 0,
+    lightRange: 0,
+    count: 0,
+    sizeMul: 1,
+    speedMul: 1,
+    decayMul: 1,
+  },
+  ember: {
+    hueBase: 12,
+    hueRange: 40,
+    sat: 100,
+    lightBase: 42,
+    lightRange: 24,
+    count: 16,
+    sizeMul: 1,
+    speedMul: 1,
+    decayMul: 1,
+  },
+  blue: {
+    hueBase: 190,
+    hueRange: 40,
+    sat: 100,
+    lightBase: 50,
+    lightRange: 24,
+    count: 14,
+    sizeMul: 1,
+    speedMul: 1,
+    decayMul: 1,
+  },
+  spark: {
+    hueBase: 45,
+    hueRange: 15,
+    sat: 100,
+    lightBase: 70,
+    lightRange: 20,
+    count: 22,
+    sizeMul: 0.7,
+    speedMul: 1.4,
+    decayMul: 1.3,
+  },
 }
 
 let canvas: HTMLCanvasElement | null = null
@@ -24,20 +86,22 @@ function initFlame(c: HTMLCanvasElement | null): void {
 }
 
 function spawnFlame(x: number, y: number): void {
-  if (reducedMotion() || getConfig().feedback === false || getConfig().flame === false) return
+  const style = getConfig().flame
+  if (reducedMotion() || getConfig().feedback === false || style === 'off') return
   if (!ctx) return
-  const n = 16
-  for (let i = 0; i < n; i++) {
+  const spec = FLAME_SPECS[style] ?? FLAME_SPECS.ember
+  for (let i = 0; i < spec.count; i++) {
     const a = Math.random() * Math.PI * 2
-    const speed = 0.6 + Math.random() * 2.6
+    const speed = (0.6 + Math.random() * 2.6) * spec.speedMul
     particles.push({
       x: x + (Math.random() - 0.5) * 3,
       y: y + (Math.random() - 0.5) * 2,
       vx: Math.cos(a) * speed * 0.5,
       vy: -Math.abs(Math.sin(a)) * speed - 1.2,
       life: 1,
-      decay: 0.02 + Math.random() * 0.03,
-      size: 2 + Math.random() * 4,
+      decay: (0.02 + Math.random() * 0.03) * spec.decayMul,
+      size: (2 + Math.random() * 4) * spec.sizeMul,
+      spec,
     })
   }
   if (particles.length > 500) particles.splice(0, particles.length - 500)
@@ -64,7 +128,10 @@ function frame(): void {
     p.vy -= 0.05
     p.vx *= 0.97
     const t = p.life
-    g.fillStyle = 'hsla(' + (12 + 40 * t) + ', 100%, ' + (42 + 24 * t) + '%, ' + t + ')'
+    const spec = p.spec
+    g.fillStyle =
+      'hsla(' + (spec.hueBase + spec.hueRange * t) + ', ' + spec.sat + '%, ' +
+      (spec.lightBase + spec.lightRange * t) + '%, ' + t + ')'
     g.beginPath()
     g.arc(p.x, p.y, p.size * t, 0, Math.PI * 2)
     g.fill()

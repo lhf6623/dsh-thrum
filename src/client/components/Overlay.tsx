@@ -35,7 +35,7 @@ export function Overlay() {
   const keyboard = (
     <div
       className={clsx(
-        "vibe-fixed vibe-z-40 vibe-pointer-events-none vibe-origin-[50%_100%] vibe-transition-[left,bottom] vibe-duration-300 [@media(max-width:920px)]:vibe-hidden motion-reduce:vibe-transition-none",
+        "vibe-fixed vibe-z-40 vibe-pointer-events-none vibe-origin-[50%_100%] vibe-transition-[left,bottom] vibe-duration-100 [@media(max-width:920px)]:vibe-hidden motion-reduce:vibe-transition-none",
         "vibe-translate-x--1/2",
         !cfg.enabled && "vibe-hidden",
       )}

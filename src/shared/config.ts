@@ -9,17 +9,23 @@ export type ShakeLevel = (typeof SHAKE_LEVELS)[number];
 export const MOLE_FREQUENCIES = ["off", "low", "medium", "high"] as const;
 export type MoleFrequency = (typeof MOLE_FREQUENCIES)[number];
 
+export const FLAME_STYLES = ["off", "ember", "blue", "spark"] as const;
+export type FlameStyle = (typeof FLAME_STYLES)[number];
+
+export const SOUND_STYLES = ["off", "ding", "chime", "pop"] as const;
+export type SoundStyle = (typeof SOUND_STYLES)[number];
+
 // —— 配置字段类型（接口）——
 export interface Config {
   enabled: boolean;
   opacity: number;
   moleFrequency: MoleFrequency;
   feedback: boolean;
-  flame: boolean;
+  flame: FlameStyle;
   shake: ShakeLevel;
   response: boolean;
   pageShakeLevel: ShakeLevel;
-  sound: boolean;
+  sound: SoundStyle;
 }
 
 // —— 字段规格（唯一真源：字段名、类型约束、默认值）——
@@ -34,7 +40,12 @@ export type ConfigFieldSpec =
       def: MoleFrequency;
     }
   | { key: "feedback"; kind: "boolean"; def: boolean }
-  | { key: "flame"; kind: "boolean"; def: boolean }
+  | {
+      key: "flame";
+      kind: "enum";
+      values: readonly FlameStyle[];
+      def: FlameStyle;
+    }
   | {
       key: "shake";
       kind: "enum";
@@ -48,7 +59,12 @@ export type ConfigFieldSpec =
       values: readonly ShakeLevel[];
       def: ShakeLevel;
     }
-  | { key: "sound"; kind: "boolean"; def: boolean };
+  | {
+      key: "sound";
+      kind: "enum";
+      values: readonly SoundStyle[];
+      def: SoundStyle;
+    };
 
 export const CONFIG_FIELDS: readonly ConfigFieldSpec[] = [
   { key: "enabled", kind: "boolean", def: true },
@@ -60,11 +76,11 @@ export const CONFIG_FIELDS: readonly ConfigFieldSpec[] = [
     def: "medium",
   },
   { key: "feedback", kind: "boolean", def: true },
-  { key: "flame", kind: "boolean", def: true },
+  { key: "flame", kind: "enum", values: FLAME_STYLES, def: "ember" },
   { key: "shake", kind: "enum", values: SHAKE_LEVELS, def: "off" },
   { key: "response", kind: "boolean", def: true },
   { key: "pageShakeLevel", kind: "enum", values: SHAKE_LEVELS, def: "off" },
-  { key: "sound", kind: "boolean", def: true },
+  { key: "sound", kind: "enum", values: SOUND_STYLES, def: "ding" },
 ];
 
 // 字段名（遍历/校验保持一致，派生自 CONFIG_FIELDS，避免第二处硬编码）
@@ -107,9 +123,15 @@ export function normalizeConfig(input: unknown): Config {
         out[f.key] = clamp(raw, f.min, f.max, f.def);
         break;
       case "enum":
-        out[f.key] = (f.values as readonly unknown[]).includes(raw)
-          ? raw
-          : f.def;
+        // 兼容旧布尔持久化值：true -> 该字段默认值（如 ember/ding），false -> "off"；
+        // 否则仅接受合法字面量，非法/缺失时回退字段默认值。
+        if (typeof raw === "boolean") {
+          out[f.key] = raw ? (f.def as string) : "off";
+        } else {
+          out[f.key] = (f.values as readonly unknown[]).includes(raw)
+            ? raw
+            : f.def;
+        }
         break;
     }
   }

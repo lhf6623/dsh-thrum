@@ -28,5 +28,14 @@ export default defineConfig({
         selector: (s: string) => `body[data-ds-dark-theme] ${s}`,
       };
     },
+    (matcher: string) => {
+      if (!matcher.startsWith("motion-reduce:")) return matcher;
+      return {
+        matcher: matcher.slice("motion-reduce:".length),
+        // 减弱动态时关闭过渡：用 parent 字段把规则包进 at-rule，语义等价于
+        // presetMini 内部 variantParentMatcher(name, "@media (prefers-reduced-motion: reduce)")。
+        parent: "@media (prefers-reduced-motion: reduce)",
+      };
+    },
   ],
 });
