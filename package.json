@@ -4,6 +4,15 @@
   "description": "DeepSeek Harness 输入氛围插件：为输入过程增添氛围。",
   "type": "module",
   "main": "lib/index.js",
+  "homepage": "https://github.com/lhf6623/dsh-thrum#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lhf6623/dsh-thrum.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lhf6623/dsh-thrum/issues"
+  },
+  "author": "lihaifeng <lhf6623@qq.com>",
   "exports": {
     ".": "./lib/index.js",
     "./client": "./lib/client.js",
@@ -15,6 +24,7 @@
     "cordis.patch.yml"
   ],
   "scripts": {
+    "prepublishOnly": "pnpm run build",
     "build": "vite build --config vite.host.config.ts && vite build --config vite.client.config.ts",
     "build:host": "vite build --config vite.host.config.ts",
     "build:client": "vite build --config vite.client.config.ts",
