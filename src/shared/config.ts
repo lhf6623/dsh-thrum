@@ -26,6 +26,7 @@ export interface Config {
   response: boolean;
   pageShakeLevel: ShakeLevel;
   sound: SoundStyle;
+  aiFeedback: boolean;
 }
 
 // —— 字段规格（唯一真源：字段名、类型约束、默认值）——
@@ -64,7 +65,8 @@ export type ConfigFieldSpec =
       kind: "enum";
       values: readonly SoundStyle[];
       def: SoundStyle;
-    };
+    }
+  | { key: "aiFeedback"; kind: "boolean"; def: boolean };
 
 export const CONFIG_FIELDS: readonly ConfigFieldSpec[] = [
   { key: "enabled", kind: "boolean", def: true },
@@ -81,6 +83,7 @@ export const CONFIG_FIELDS: readonly ConfigFieldSpec[] = [
   { key: "response", kind: "boolean", def: true },
   { key: "pageShakeLevel", kind: "enum", values: SHAKE_LEVELS, def: "off" },
   { key: "sound", kind: "enum", values: SOUND_STYLES, def: "ding" },
+  { key: "aiFeedback", kind: "boolean", def: true },
 ];
 
 // 字段名（遍历/校验保持一致，派生自 CONFIG_FIELDS，避免第二处硬编码）

@@ -39,6 +39,7 @@ const zh: Record<string, string> = {
   "option.pop": "泡泡",
   "feedback.flame.desc": "打字光标处喷出的粒子样式；「关」=不显示",
   "response.sound.desc": "回答完成时的提示音；「关」=不播放",
+  "group.aiFeedback": "AI 陪伴",
 };
 
 const en: Record<string, string> = {
@@ -67,6 +68,7 @@ const en: Record<string, string> = {
   "option.pop": "Pop",
   "feedback.flame.desc": "Particle style at the typing caret; Off = hidden",
   "response.sound.desc": "Sound when an answer finishes; Off = silent",
+  "group.aiFeedback": "AI Companion",
 };
 
 let service: LocaleService | null = null;

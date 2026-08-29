@@ -169,6 +169,11 @@ const GROUPS: GroupDef[] = [
       },
     ],
   },
+  {
+    master: "aiFeedback",
+    titleKey: "group.aiFeedback",
+    fields: [],
+  },
 ];
 
 function Row(props: {

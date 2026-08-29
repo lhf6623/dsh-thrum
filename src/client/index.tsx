@@ -3,6 +3,7 @@ import { ThrumCard } from "./components/ThrumCard";
 import { playAnswerSound, attachAudioPrime } from "./lib/fx/audio";
 import { shakePage, attachInputShake } from "./lib/fx/shake";
 import { attachFlame } from "./lib/fx/flame";
+import { attachAiPresence, feedAiPresence } from "./lib/fx/motion";
 import { attachSettings, normalizeConfig } from "./lib/config";
 import { installI18n, t } from "./lib/i18n";
 import { pluginName } from "@/shared/identity";
@@ -46,6 +47,8 @@ export function apply(ctx: any) {
   ctx.effect(attachFlame);
   ctx.effect(attachInputShake);
   ctx.effect(attachAudioPrime);
+  // AI 陪伴占位动效：订阅生命周期事件，低打扰光点占位（可关、尊重 reduced-motion）。
+  ctx.effect(attachAiPresence);
   if (typeof EventSource !== "undefined") {
     ctx.effect(() => {
       const es = new EventSource("/api/thrum-events");
@@ -54,6 +57,9 @@ export function apply(ctx: any) {
         try {
           data = JSON.parse(e.data);
         } catch {}
+        // 生命周期事件（turn/*|step/*|assistant/*|tool/*）喂给 AI 陪伴状态机；
+        // answer-done 等非生命周期帧在 feedAiPresence 内部被忽略。
+        feedAiPresence(data);
         if (data && data.type === "answer-done") {
           playAnswerSound();
           shakePage();

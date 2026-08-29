@@ -57,7 +57,26 @@ export const Config: z<ConfigShape> = z.object(
   Object.fromEntries(CONFIG_FIELDS.map((f) => [f.key, buildFieldSchema(f)])),
 ) as z<ConfigShape>;
 
-function sseData(frame: { type: string }): string {
+// SSE 转发帧：host 复用的最小 envelope，携带事件 type 与其可选 data。
+interface ThrumFrame {
+  type: string;
+  data?: unknown;
+}
+
+// 需要从 session 日志转发给浏览器的事件类型（AI 生命周期阶段）。
+// 与既有 answer-done 兼容：turn/end 仍额外下发 answer-done。
+const FORWARDED_SESSION_EVENT_TYPES: readonly string[] = [
+  "turn/start",
+  "turn/end",
+  "step/start",
+  "step/end",
+  "assistant/chunk",
+  "assistant/message",
+  "tool/call",
+  "tool/result",
+];
+
+function sseData(frame: ThrumFrame): string {
   return "data: " + JSON.stringify(frame) + "\n\n";
 }
 
@@ -76,8 +95,8 @@ export default {
 
     const connections = new Set<any>();
 
-    function broadcast(type: string) {
-      const line = sseData({ type });
+    function broadcast(frame: ThrumFrame) {
+      const line = sseData(frame);
       for (const res of connections) {
         try {
           res.write(line);
@@ -85,8 +104,20 @@ export default {
       }
     }
 
+    // 转发 AI 生命周期事件（保留 type+data），并保持既有 answer-done 兼容：
+    // turn/end 仍额外下发一条 answer-done，历史客户端行为不变。
     ctx.on("session/event", (_session: any, event: any) => {
-      if (event && event.type === "turn/end") broadcast("answer-done");
+      if (!event || typeof event.type !== "string") return;
+      if (event.type === "turn/end") broadcast({ type: "answer-done" });
+      // 只要命中转发生命周期事件即转发：data 存在则下发 {type,data}，缺失则下发 {type}，
+      // 不因 data 缺失而丢弃事件 —— data-less 生命周期帧仍能驱动客户端状态机。
+      if (FORWARDED_SESSION_EVENT_TYPES.includes(event.type)) {
+        broadcast(
+          event.data !== undefined
+            ? { type: event.type, data: event.data }
+            : { type: event.type },
+        );
+      }
     });
 
     ctx.effect(() => {
