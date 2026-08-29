@@ -1,0 +1,56 @@
+name: Publish to npm
+
+# CD：打版本 tag 即自动发布到 npm（token 存 GitHub Secret NPM_TOKEN）。
+# 用法：npm version patch/minor/major && git push --tags
+# 注意：账号开了 2FA，NPM_TOKEN 需为「绕过 2FA」的 Granular Access Token（publish 权限）。
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "仅预演，不发到 npm"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Verify version in package.json
+        run: node -p "require('./package.json').version"
+
+      - name: Publish (dry-run)
+        if: ${{ inputs.dry_run }}
+        run: npm publish --registry https://registry.npmjs.org --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        if: ${{ !inputs.dry_run }}
+        run: npm publish --registry https://registry.npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

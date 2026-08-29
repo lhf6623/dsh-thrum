@@ -1,6 +1,7 @@
 {
   "name": "dsh-thrum",
   "version": "0.2.1",
+  "packageManager": "pnpm@11.21.0",
   "description": "DeepSeek Harness 输入氛围插件：为输入过程增添氛围。",
   "type": "module",
   "main": "lib/index.js",
