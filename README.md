@@ -1,8 +1,8 @@
-# dsh-vibe
+# dsh-thrum
 
 <div align="center">
 
-<img src="assets/cover.svg" alt="dsh-vibe 封面" width="100%" />
+<img src="assets/cover.svg" alt="dsh-thrum 封面" width="100%" />
 
 </div>
 
@@ -10,10 +10,10 @@ DeepSeek Harness (DSH) 输入氛围插件：在输入框上方展示一块 87 �
 
 <div align="center">
 
-![License](https://img.shields.io/github/license/lhf6623/dsh-vibe)
-![version](https://img.shields.io/github/package-json/v/lhf6623/dsh-vibe)
-![last commit](https://img.shields.io/github/last-commit/lhf6623/dsh-vibe)
-![stars](https://img.shields.io/github/stars/lhf6623/dsh-vibe)
+![License](https://img.shields.io/github/license/lhf6623/dsh-thrum)
+![version](https://img.shields.io/github/package-json/v/lhf6623/dsh-thrum)
+![last commit](https://img.shields.io/github/last-commit/lhf6623/dsh-thrum)
+![stars](https://img.shields.io/github/stars/lhf6623/dsh-thrum)
 ![Harness plugin](https://img.shields.io/badge/Harness--plugin-orange)
 
 </div>
@@ -30,7 +30,7 @@ DeepSeek Harness (DSH) 输入氛围插件：在输入框上方展示一块 87 �
 ## 📦 安装
 
 ```bash
-dsh plugin add github:lhf6623/dsh-vibe
+dsh plugin add github:lhf6623/dsh-thrum
 ```
 
 ## ⚙️ 配置
@@ -50,8 +50,8 @@ dsh plugin add github:lhf6623/dsh-vibe
 也可在 profile 的 `cordis.patch.yml` 中为插件配置默认值（作为设置面板之下的组装层）：
 
 ```yaml
-- id: vibe
-  name: "dsh-vibe"
+- id: thrum
+  name: "dsh-thrum"
   config:
     enabled: true # 键盘外观组总开关
     opacity: 0.5 # 键盘透明度
@@ -72,7 +72,7 @@ dsh plugin add github:lhf6623/dsh-vibe
 - 0.1.35 全部样式改用 UnoCSS 原子类
 - 0.1.34 设置迁移到 DSH settings 服务
 - 0.1.33 TypeScript 源码拆分重构
-- 0.1.28 更名为 dsh-vibe
+- 0.1.28 更名为 dsh-vibe（本插件现名 dsh-thrum）
 - 0.1.27 新增回答完成提示音 + 整页抖动
 - 0.1.26 新增输入抖动
 - 0.1.21 新增打字火焰效果

@@ -1,24 +1,24 @@
 import { defineConfig, presetMini } from "unocss";
 
-// 所有 UnoCSS 生成的原子类都带 vibe- 前缀，避免与 DSH 自身的类名冲突。
+// 所有 UnoCSS 生成的原子类都带 thrum- 前缀，避免与 DSH 自身的类名冲突。
 // dsh-dark: 变体跟随 DSH 的深色模式属性 body[data-ds-dark-theme]，
 // 用于把键帽/鼠标等组件的深色配色也写成原子类。
 export default defineConfig({
-  presets: [presetMini({ prefix: "vibe-" })],
-  // presetMini 未覆盖的翻转 3D/过渡类，这里补成 atom class（带 vibe- 前缀）。
+  presets: [presetMini({ prefix: "thrum-" })],
+  // presetMini 未覆盖的翻转 3D/过渡类，这里补成 atom class（带 thrum- 前缀）。
   rules: [
-    ["vibe-preserve-3d", { "transform-style": "preserve-3d" }],
-    ["vibe-perspective-260", { perspective: "260px" }],
-    ["vibe-transition-transform", { "transition-property": "transform" }],
-    ["vibe-rotate-y-0", { transform: "rotateY(0deg)" }],
-    ["vibe-rotate-y-180", { transform: "rotateY(180deg)" }],
-    ["vibe-translate-z-half", { transform: "translateZ(0.5px)" }],
+    ["thrum-preserve-3d", { "transform-style": "preserve-3d" }],
+    ["thrum-perspective-260", { perspective: "260px" }],
+    ["thrum-transition-transform", { "transition-property": "transform" }],
+    ["thrum-rotate-y-0", { transform: "rotateY(0deg)" }],
+    ["thrum-rotate-y-180", { transform: "rotateY(180deg)" }],
+    ["thrum-translate-z-half", { transform: "translateZ(0.5px)" }],
     [
-      "vibe-rotate-y-180-translate-z-half",
+      "thrum-rotate-y-180-translate-z-half",
       { transform: "rotateY(180deg) translateZ(0.5px)" },
     ],
-    ["vibe-vis-delay-show", { transition: "visibility 0s 0s" }],
-    ["vibe-vis-delay-hide", { transition: "visibility 0s 600ms" }],
+    ["thrum-vis-delay-show", { transition: "visibility 0s 0s" }],
+    ["thrum-vis-delay-hide", { transition: "visibility 0s 600ms" }],
   ],
   variants: [
     (matcher: string) => {

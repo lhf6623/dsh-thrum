@@ -1,5 +1,5 @@
 {
-  "name": "dsh-vibe",
+  "name": "dsh-thrum",
   "version": "0.2.1",
   "description": "DeepSeek Harness 输入氛围插件：为输入过程增添氛围。",
   "type": "module",
@@ -49,7 +49,7 @@
     "deepseek-harness",
     "keyboard",
     "mouse",
-    "vibe",
+    "thrum",
     "fx",
     "feedback"
   ],

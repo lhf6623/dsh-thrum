@@ -2,19 +2,19 @@ import { configStorageKey } from '@/shared/identity'
 import {
   DEFAULTS,
   normalizeConfig,
-  type Config as VibeConfig,
+  type Config as ThrumConfig,
   type ShakeLevel,
   type MoleFrequency,
 } from '@/shared/config'
 
 export { DEFAULTS, normalizeConfig }
-export type { VibeConfig, ShakeLevel, MoleFrequency }
+export type { ThrumConfig, ShakeLevel, MoleFrequency }
 
 // 持久化键：localStorage（浏览器本地，发布后依然有效）。
 // 系统 settings（settingsScope）可用时（白名单暴露）优先读系统值并回写，未暴露时 localStorage 是唯一存储。
 const KEY = configStorageKey()
 
-function loadLocal(): VibeConfig {
+function loadLocal(): ThrumConfig {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
       const raw = window.localStorage.getItem(KEY)
@@ -24,7 +24,7 @@ function loadLocal(): VibeConfig {
   return { ...DEFAULTS }
 }
 
-function saveLocal(c: VibeConfig): void {
+function saveLocal(c: ThrumConfig): void {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
       window.localStorage.setItem(KEY, JSON.stringify(c))
@@ -48,12 +48,12 @@ export interface SettingsScopeLike<T> {
   set(field: string, value: unknown): Promise<void>
 }
 
-let scope: SettingsScopeLike<VibeConfig> | null = null
-let config: VibeConfig = loadLocal()
-const listeners = new Set<(c: VibeConfig) => void>()
+let scope: SettingsScopeLike<ThrumConfig> | null = null
+let config: ThrumConfig = loadLocal()
+const listeners = new Set<(c: ThrumConfig) => void>()
 
 /** 绑定系统 settings namespace 的客户端 scope（由 client.tsx 在 apply 时调用一次）。 */
-export function attachSettings(s: SettingsScopeLike<VibeConfig>): void {
+export function attachSettings(s: SettingsScopeLike<ThrumConfig>): void {
   scope = s
   const snap = s.getSnapshot()
   if (snap.status === 'ready' && snap.value) {
@@ -73,12 +73,12 @@ export function attachSettings(s: SettingsScopeLike<VibeConfig>): void {
   if (p && typeof p.then === 'function') p.catch(() => {})
 }
 
-export function getConfig(): VibeConfig {
+export function getConfig(): ThrumConfig {
   return config
 }
 
 /** 修改配置：写 localStorage 持久化；scope 可用时同步写入系统 settings。 */
-export function setConfig(patch: Partial<VibeConfig>): void {
+export function setConfig(patch: Partial<ThrumConfig>): void {
   const next = normalizeConfig({ ...config, ...patch })
   config = next
   saveLocal(next)
@@ -90,7 +90,7 @@ export function setConfig(patch: Partial<VibeConfig>): void {
   }
 }
 
-export function subscribeConfig(fn: (c: VibeConfig) => void): () => void {
+export function subscribeConfig(fn: (c: ThrumConfig) => void): () => void {
   listeners.add(fn)
   return () => { listeners.delete(fn) }
 }

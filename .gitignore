@@ -7,6 +7,7 @@ package-lock.json
 .pnpm-store
 .npm-cache
 .agent-teams
+research
 
 
 # 测试/临时文件目录（agent 测试产物统一放这里，不提交）

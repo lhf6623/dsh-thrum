@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-export const LOCALE_NS = "vibe";
+export const LOCALE_NS = "thrum";
 
 /** DSH 客户端 locale 服务的最小形状（由 @deepseek-ai/dsh-client-locale 提供）。 */
 export interface LocaleService {
@@ -42,7 +42,7 @@ const zh: Record<string, string> = {
 };
 
 const en: Record<string, string> = {
-  section: "Vibe",
+  section: "Thrum",
   "group.appearance": "Keyboard",
   "group.typing": "Typing Feedback",
   "group.response": "Answer Feedback",

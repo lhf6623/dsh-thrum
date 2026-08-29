@@ -147,7 +147,7 @@ function stopFlame(): void {
   ctx = null
 }
 
-const CANVAS_CLASS = 'vibe-fixed vibe-top-0 vibe-left-0 vibe-w-full vibe-h-full vibe-z-45 vibe-pointer-events-none'
+const CANVAS_CLASS = 'thrum-fixed thrum-top-0 thrum-left-0 thrum-w-full thrum-h-full thrum-z-45 thrum-pointer-events-none'
 
 /**
  * 页面级打字特效（无 React 组件）：自建全屏火焰画布挂到 body，

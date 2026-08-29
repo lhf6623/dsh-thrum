@@ -95,7 +95,7 @@ export const ROWS: KeyDef[][] = [
 
 // —— 自适应布局宽度常量（派生自 ROWS，单一真源，避免硬编码）——
 // 键帽总宽公式与 Key.tsx 保持一致：keyWidthPx(w) = round(w*30 + (w-1)*5)。
-// 行内水平间距固定 5px（KeyboardMain 行容器 vibe-gap-[5px]）；spacer 为 18px 固定占位。
+// 行内水平间距固定 5px（KeyboardMain 行容器 thrum-gap-[5px]）；spacer 为 18px 固定占位。
 
 export const KEY_UNIT = 30;
 export const KEY_GAP = 5;
@@ -121,7 +121,7 @@ export const KEYBOARD_NATURAL_WIDTH = Math.max(...ROWS.map(rowWidthPx));
 /** 右侧列（鼠标 + 方向键）宽度：与 Overlay 右侧 col 一致（ArrowView 最宽 100px）。 */
 export const SIDE_COLUMN_WIDTH = 100;
 
-/** 键盘与右侧列之间的水平间距（Overlay 根容器 vibe-gap-[3px]）。 */
+/** 键盘与右侧列之间的水平间距（Overlay 根容器 thrum-gap-[3px]）。 */
 export const SIDE_GAP = 3;
 
 /** 完整布局（键盘 + 右侧列）宽度：composer 达到该宽度才展示右侧列。 */

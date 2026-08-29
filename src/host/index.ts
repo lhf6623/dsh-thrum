@@ -27,7 +27,7 @@ export type {
 export const name = pluginName();
 
 /** Settings namespace owned by this plugin（浏览器侧经 settingsScope 读写）。 */
-export const VIBE_SETTINGS_NAMESPACE = settingsNamespace(pluginName());
+export const THRUM_SETTINGS_NAMESPACE = settingsNamespace(pluginName());
 
 /**
  * 插件配置（配置式写法，见 cordis-tutorial/05-config）：
@@ -69,7 +69,7 @@ export default {
     // 作为 settings 的 base 层（schema 校验由 installSettingsSection / settings 服务完成）。
     // 因此 attach / detach / 变更时宿主侧没有需要重算的派生状态 —— 两个 hook 均为空实现，
     // 不再存储/读取 source thunk，避免「保持来源最新但无人消费」的无意义乒乓。
-    installSettingsSection(ctx, VIBE_SETTINGS_NAMESPACE, Config, config, {
+    installSettingsSection(ctx, THRUM_SETTINGS_NAMESPACE, Config, config, {
       setSource: () => {},
       onChange: () => {},
     });
@@ -92,7 +92,7 @@ export default {
     ctx.effect(() => {
       const disposeRoute = ctx.webServer.register({
         kind: "exact",
-        path: "/api/vibe-events",
+        path: "/api/thrum-events",
         handler: (req: any, res: any) => {
           if (req.method !== "GET" && req.method !== "HEAD") {
             res.writeHead(405);

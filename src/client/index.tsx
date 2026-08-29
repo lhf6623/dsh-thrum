@@ -1,5 +1,5 @@
 import { Overlay } from "./components/Overlay";
-import { VibeCard } from "./components/VibeCard";
+import { ThrumCard } from "./components/ThrumCard";
 import { playAnswerSound, attachAudioPrime } from "./lib/fx/audio";
 import { shakePage, attachInputShake } from "./lib/fx/shake";
 import { attachFlame } from "./lib/fx/flame";
@@ -26,11 +26,11 @@ export function apply(ctx: any) {
     ctx.slots.register(
       {
         name: "settings.section",
-        id: "vibe",
+        id: "thrum",
         order: 5,
         label: () => t("section"),
       },
-      VibeCard,
+      ThrumCard,
     ),
   );
   // 绑定系统 settings namespace：配置来自 cordis.yml（Config schema）经 settings 服务解析，
@@ -48,7 +48,7 @@ export function apply(ctx: any) {
   ctx.effect(attachAudioPrime);
   if (typeof EventSource !== "undefined") {
     ctx.effect(() => {
-      const es = new EventSource("/api/vibe-events");
+      const es = new EventSource("/api/thrum-events");
       es.onmessage = (e) => {
         let data: any = null;
         try {

@@ -29,8 +29,8 @@ export const resolve = {
  * 运行中 harness 的插件安装位置 (dsh-client-hmr 轮询监控这里的 client.js)。
  * 构建/监听后把产物同步过去，客户端改动即可被 harness 检测 -> SSE 通知浏览器热替换。
  * 解析顺序:
- *   1. 环境变量 DSH_VIBE_PROFILE_LIB (完整路径, 最优先)
- *   2. 环境变量 DSH_VIBE_PROFILE (profile 名, 如 'web')
+ *   1. 环境变量 DSH_THRUM_PROFILE_LIB (完整路径, 最优先)
+ *   2. 环境变量 DSH_THRUM_PROFILE (profile 名, 如 'web')
  *   3. 自动扫描 ~/.dsh/profiles 下所有装了本插件的 profile (取第一个存在的)
  * 找不到则禁用同步 (静默跳过)。
  */
@@ -46,13 +46,13 @@ function discoverProfileLib(): string | null {
 }
 
 const PROFILE_LIB =
-  process.env.DSH_VIBE_PROFILE_LIB ||
-  (process.env.DSH_VIBE_PROFILE
+  process.env.DSH_THRUM_PROFILE_LIB ||
+  (process.env.DSH_THRUM_PROFILE
     ? join(
         homedir(),
         ".dsh",
         "profiles",
-        process.env.DSH_VIBE_PROFILE,
+        process.env.DSH_THRUM_PROFILE,
         "node_modules",
         ID,
         "lib",
@@ -84,7 +84,7 @@ function collectSource(dir = "src"): string[] {
   return files;
 }
 
-// 扫描源码提取 vibe-* 原子类生成 CSS（preflights 开：tabular-nums / translate 依赖 --un-* 变量）
+// 扫描源码提取 thrum-* 原子类生成 CSS（preflights 开：tabular-nums / translate 依赖 --un-* 变量）
 async function generateUnoCss(): Promise<string> {
   const { config } = await loadConfig(process.cwd());
   const uno = await createGenerator(config);

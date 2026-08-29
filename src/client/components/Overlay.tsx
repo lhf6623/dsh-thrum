@@ -35,16 +35,16 @@ export function Overlay() {
   const keyboard = (
     <div
       className={clsx(
-        "vibe-fixed vibe-z-40 vibe-pointer-events-none vibe-origin-[50%_100%] vibe-transition-[left,bottom] vibe-duration-100 [@media(max-width:920px)]:vibe-hidden motion-reduce:vibe-transition-none",
-        "vibe-translate-x--1/2",
-        !cfg.enabled && "vibe-hidden",
+        "thrum-fixed thrum-z-40 thrum-pointer-events-none thrum-origin-[50%_100%] thrum-transition-[left,bottom] thrum-duration-100 [@media(max-width:920px)]:thrum-hidden motion-reduce:thrum-transition-none",
+        "thrum-translate-x--1/2",
+        !cfg.enabled && "thrum-hidden",
       )}
       style={rootStyle}
     >
-      <div className="vibe-flex vibe-items-stretch vibe-gap-[3px]">
+      <div className="thrum-flex thrum-items-stretch thrum-gap-[3px]">
         <KeyboardMain animals={animals} />
         {mode === "full" && (
-          <div className="vibe-flex vibe-flex-col vibe-justify-between vibe-items-center">
+          <div className="thrum-flex thrum-flex-col thrum-justify-between thrum-items-center">
             <MouseView mouse={mouse} />
             <ArrowView animals={animals} />
           </div>

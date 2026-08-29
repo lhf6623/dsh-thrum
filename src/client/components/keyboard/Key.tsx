@@ -3,15 +3,15 @@ import { clsx } from "clsx";
 
 // —— 键帽：单一静态外观（按键反馈由动物翻面表达）——
 const KEY_BASE = clsx(
-  "vibe-flex vibe-items-center vibe-justify-center vibe-h-[30px] vibe-box-border vibe-rounded-md vibe-border vibe-border-solid vibe-text-[10px] vibe-font-mono",
-  "vibe-border-[rgba(0,0,0,0.2)]",
-  "vibe-bg-[rgba(255,255,255,0.25)]",
-  "vibe-text-[rgba(0,0,0,0.45)]",
-  "vibe-shadow-[0_1px_0_rgba(0,0,0,0.08)]",
-  "dsh-dark:vibe-border-[rgba(255,255,255,0.14)]",
-  "dsh-dark:vibe-bg-[rgba(255,255,255,0.07)]",
-  "dsh-dark:vibe-text-[rgba(255,255,255,0.72)]",
-  "dsh-dark:vibe-shadow-[0_1px_0_rgba(0,0,0,0.35)]",
+  "thrum-flex thrum-items-center thrum-justify-center thrum-h-[30px] thrum-box-border thrum-rounded-md thrum-border thrum-border-solid thrum-text-[10px] thrum-font-mono",
+  "thrum-border-[rgba(0,0,0,0.2)]",
+  "thrum-bg-[rgba(255,255,255,0.25)]",
+  "thrum-text-[rgba(0,0,0,0.45)]",
+  "thrum-shadow-[0_1px_0_rgba(0,0,0,0.08)]",
+  "dsh-dark:thrum-border-[rgba(255,255,255,0.14)]",
+  "dsh-dark:thrum-bg-[rgba(255,255,255,0.07)]",
+  "dsh-dark:thrum-text-[rgba(255,255,255,0.72)]",
+  "dsh-dark:thrum-shadow-[0_1px_0_rgba(0,0,0,0.35)]",
 );
 
 export function Key(props: { label: string; w: number; animal?: string }) {
@@ -48,7 +48,7 @@ export function Key(props: { label: string; w: number; animal?: string }) {
 
   return (
     <div
-      className={clsx(KEY_BASE, "vibe-relative", "vibe-perspective-260")}
+      className={clsx(KEY_BASE, "thrum-relative", "thrum-perspective-260")}
       style={{
         width: Math.round(props.w * 30 + (props.w - 1) * 5) + "px",
       }}
@@ -57,26 +57,26 @@ export function Key(props: { label: string; w: number; animal?: string }) {
       <div
         ref={flipRef}
         className={clsx(
-          "vibe-absolute vibe-inset-0 vibe-preserve-3d vibe-transition-transform vibe-duration-600 vibe-ease-in-out",
-          flipped ? "vibe-rotate-y-180" : "vibe-rotate-y-0",
+          "thrum-absolute thrum-inset-0 thrum-preserve-3d thrum-transition-transform thrum-duration-600 thrum-ease-in-out",
+          flipped ? "thrum-rotate-y-180" : "thrum-rotate-y-0",
         )}
       >
         <div
           className={clsx(
-            "vibe-absolute vibe-inset-0 vibe-flex vibe-items-center vibe-justify-center vibe-backface-hidden vibe-translate-z-half",
+            "thrum-absolute thrum-inset-0 thrum-flex thrum-items-center thrum-justify-center thrum-backface-hidden thrum-translate-z-half",
             flipped
-              ? "vibe-invisible vibe-vis-delay-hide"
-              : "vibe-visible vibe-vis-delay-show",
+              ? "thrum-invisible thrum-vis-delay-hide"
+              : "thrum-visible thrum-vis-delay-show",
           )}
         >
           {props.label}
         </div>
         <div
           className={clsx(
-            "vibe-absolute vibe-inset-0 vibe-flex vibe-items-center vibe-justify-center vibe-backface-hidden vibe-rotate-y-180-translate-z-half vibe-text-[20px] vibe-leading-none",
+            "thrum-absolute thrum-inset-0 thrum-flex thrum-items-center thrum-justify-center thrum-backface-hidden thrum-rotate-y-180-translate-z-half thrum-text-[20px] thrum-leading-none",
             flipped
-              ? "vibe-visible vibe-vis-delay-show"
-              : "vibe-invisible vibe-vis-delay-hide",
+              ? "thrum-visible thrum-vis-delay-show"
+              : "thrum-invisible thrum-vis-delay-hide",
           )}
         >
           {shown ?? ""}

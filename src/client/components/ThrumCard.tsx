@@ -1,66 +1,66 @@
 import { Fragment } from "react";
 import type { ReactNode } from "react";
 import { clsx } from "clsx";
-import { setConfig, VibeConfig } from "@/client/lib/config";
+import { setConfig, ThrumConfig } from "@/client/lib/config";
 import { useConfig } from "@/client/hooks/useConfig";
 import { useLocale } from "@/client/lib/i18n";
 
 // —— 系统设置面板行模板（对齐 DSH 通用设置）——
 const ROW = clsx(
-  "vibe-flex",
-  "vibe-items-center",
-  "vibe-gap-2",
-  "vibe-py-4",
-  "vibe-border-0",
-  "vibe-border-b",
-  "vibe-border-solid",
-  "vibe-border-[var(--dsw-alias-border-l2)]",
+  "thrum-flex",
+  "thrum-items-center",
+  "thrum-gap-2",
+  "thrum-py-4",
+  "thrum-border-0",
+  "thrum-border-b",
+  "thrum-border-solid",
+  "thrum-border-[var(--dsw-alias-border-l2)]",
 );
-const ROW_LAST = clsx(ROW, "vibe-border-b-0");
+const ROW_LAST = clsx(ROW, "thrum-border-b-0");
 // 主开关标题行：加粗标题 + 左右对称，无底边框（关闭时不留残线；非首组加顶部边框分隔）
 const HEAD_ROW =
-  "vibe-flex vibe-items-center vibe-justify-between vibe-gap-2 vibe-py-4";
+  "thrum-flex thrum-items-center thrum-justify-between thrum-gap-2 thrum-py-4";
 const HEAD_ROW_DIV = clsx(
   HEAD_ROW,
-  "vibe-border-0",
-  "vibe-border-t",
-  "vibe-border-solid",
-  "vibe-border-[var(--dsw-alias-border-l2)]",
-  "vibe-mt-3",
+  "thrum-border-0",
+  "thrum-border-t",
+  "thrum-border-solid",
+  "thrum-border-[var(--dsw-alias-border-l2)]",
+  "thrum-mt-3",
 );
 // 子项行：左缩进形成层级
-const INDENT = clsx("vibe-pl-6");
-const ROW_TEXT = "vibe-flex vibe-flex-col vibe-flex-1 vibe-gap-1 vibe-min-w-0";
+const INDENT = clsx("thrum-pl-6");
+const ROW_TEXT = "thrum-flex thrum-flex-col thrum-flex-1 thrum-gap-1 thrum-min-w-0";
 const TITLE =
-  "vibe-text-[14px] vibe-leading-[22px] vibe-text-[var(--dsw-alias-label-primary)]";
+  "thrum-text-[14px] thrum-leading-[22px] thrum-text-[var(--dsw-alias-label-primary)]";
 const DESC =
-  "vibe-text-[12px] vibe-leading-[18px] vibe-text-[var(--dsw-alias-label-tertiary)]";
+  "thrum-text-[12px] thrum-leading-[18px] thrum-text-[var(--dsw-alias-label-tertiary)]";
 // 主开关行标题：加粗，与子项区分
-const HEAD_TITLE = clsx(TITLE, "vibe-font-semibold");
+const HEAD_TITLE = clsx(TITLE, "thrum-font-semibold");
 const CHECKBOX =
-  "vibe-accent-[var(--dsw-alias-brand-primary)] vibe-w-[15px] vibe-h-[15px]";
-const RANGE = "vibe-accent-[var(--dsw-alias-brand-primary)] vibe-w-[140px]";
+  "thrum-accent-[var(--dsw-alias-brand-primary)] thrum-w-[15px] thrum-h-[15px]";
+const RANGE = "thrum-accent-[var(--dsw-alias-brand-primary)] thrum-w-[140px]";
 const VALUE =
-  "vibe-text-[12px] vibe-text-[var(--dsw-alias-label-tertiary)] vibe-tabular-nums vibe-min-w-10 vibe-text-right";
+  "thrum-text-[12px] thrum-text-[var(--dsw-alias-label-tertiary)] thrum-tabular-nums thrum-min-w-10 thrum-text-right";
 const SELECT = clsx(
-  "vibe-box-border",
-  "vibe-h-[30px]",
-  "vibe-rounded-md",
-  "vibe-border",
-  "vibe-border-solid",
-  "vibe-border-[rgba(0,0,0,0.25)]",
-  "vibe-bg-transparent",
-  "vibe-px-2",
-  "vibe-text-[13px]",
-  "vibe-text-[var(--dsw-alias-label-primary)]",
-  "dsh-dark:vibe-border-[rgba(255,255,255,0.2)]",
+  "thrum-box-border",
+  "thrum-h-[30px]",
+  "thrum-rounded-md",
+  "thrum-border",
+  "thrum-border-solid",
+  "thrum-border-[rgba(0,0,0,0.25)]",
+  "thrum-bg-transparent",
+  "thrum-px-2",
+  "thrum-text-[13px]",
+  "thrum-text-[var(--dsw-alias-label-primary)]",
+  "dsh-dark:thrum-border-[rgba(255,255,255,0.2)]",
 );
 
 // —— 数据驱动：每项配置描述一个字段类型，渲染器按类型出控件；文案用 i18n key ——
 type FieldType = "checkbox" | "range" | "select";
 
 interface FieldDef {
-  key: keyof VibeConfig;
+  key: keyof ThrumConfig;
   titleKey: string;
   descKey?: string;
   type: FieldType;
@@ -75,7 +75,7 @@ interface FieldDef {
 }
 
 interface GroupDef {
-  master: keyof VibeConfig;
+  master: keyof ThrumConfig;
   titleKey: string;
   fields: FieldDef[];
 }
@@ -191,7 +191,7 @@ function Row(props: {
 
 function FieldControl(props: {
   field: FieldDef;
-  value: VibeConfig[keyof VibeConfig];
+  value: ThrumConfig[keyof ThrumConfig];
   onChange: (value: string | number | boolean) => void;
 }) {
   const { field, value, onChange } = props;
@@ -241,15 +241,15 @@ function FieldControl(props: {
 }
 
 /** 独立「氛围」设置标签（settings.section）：按 GROUPS 数据渲染，文案随 DSH 语言自动切换。 */
-export function VibeCard() {
+export function ThrumCard() {
   const cfg = useConfig();
   const { t } = useLocale();
-  const update = (patch: Partial<VibeConfig>) => setConfig(patch);
-  const setField = (key: keyof VibeConfig, value: string | number | boolean) =>
-    update({ [key]: value } as Partial<VibeConfig>);
+  const update = (patch: Partial<ThrumConfig>) => setConfig(patch);
+  const setField = (key: keyof ThrumConfig, value: string | number | boolean) =>
+    update({ [key]: value } as Partial<ThrumConfig>);
 
   return (
-    <div className="vibe-flex vibe-flex-col">
+    <div className="thrum-flex thrum-flex-col">
       {GROUPS.map((group, gi) => {
         const masterOn = Boolean(cfg[group.master]);
         return (
