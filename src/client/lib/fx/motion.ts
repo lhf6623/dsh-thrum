@@ -12,6 +12,9 @@ export function reducedMotion(): boolean {
 // 光带锚定 [data-composer-card] 外缘 8px 圆角描边 + 外发光，跟随输入框移动/缩放/内容增长。
 // 受 aiFeedback 开关控制（可关）；prefers-reduced-motion 时降级为静态细描边（零运动）。
 // 与现有打字火焰 / 输入抖动 / 回答提示音 / 整页抖动完全解耦：这里不做声音、不抖页面、无粒子。
+//
+// 注：`assistant/chunk` 是本插件的 SSE 线协议名，不是 dsh 的 session 事件（0.2.0 已无此事件）。
+// 宿主把 0.2.0 的实时流 `agent/assistant-stream` 的文本增量重新包装成该帧下发，客户端契约不变。
 
 export type AiPhase = 'idle' | 'thinking' | 'generating' | 'tool' | 'complete'
 

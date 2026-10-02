@@ -1,6 +1,6 @@
 {
   "name": "dsh-thrum",
-  "version": "0.2.2",
+  "version": "0.3.2",
   "packageManager": "pnpm@11.21.0",
   "description": "DeepSeek Harness 输入氛围插件：为输入过程增添氛围。",
   "type": "module",
@@ -31,11 +31,12 @@
     "build:client": "vite build --config vite.client.config.ts",
     "watch": "vite build --watch --config vite.client.config.ts",
     "typecheck": "tsc --noEmit",
+    "smoke": "node scripts/smoke.mjs",
+    "verify": "pnpm run typecheck && pnpm run build && pnpm run smoke",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-settings": "^0.0.1-rc.1",
-    "@deepseek-ai/schemastery": "^3.18.1",
+    "@deepseek-ai/schemastery": "^3.18.4",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@unocss/config": "^66.7.5",

@@ -33,6 +33,9 @@ DeepSeek Harness (DSH) 输入氛围插件：在输入框上方展示一块 87 �
 dsh plugin add github:lhf6623/dsh-thrum
 ```
 
+> 兼容性：本版本面向 **DSH ≥ 0.2.0**（settings 表单按 profile entry id 投影、`ctx.configForms`、`agent/assistant-stream`）。
+> 在 0.1.x 上请使用 0.2.x 版本。
+
 ## ⚙️ 配置
 
 ### 设置面板（推荐）
@@ -66,6 +69,10 @@ dsh plugin add github:lhf6623/dsh-thrum
 
 ## 📝 版本记录
 
+- 0.3.2 修复回退/删除没有火花 + 空输入框误喷：Lexical 在 keydown 阶段就 `preventDefault` 并自行删除，Backspace/Delete 不会派发 `beforeinput`/`input`，原来的 keydown 兜底又只认可打印字符。现把「真的改文本」的按键补进兜底：Backspace / Delete、Ctrl/Cmd+X/V/Z（剪切/粘贴/撤销重做）；并用 Range 文本投影判断光标方向是否真有可删内容 —— 空输入框、光标已在文本两端都不喷；Shift、方向键、Cmd+A 等非编辑键同样不喷
+- 0.3.1 适配 DSH 0.2.0 的 composer：输入宿主已不是 `<textarea>`，而是 Lexical 的 contenteditable `div[data-composer-input]`。打字火焰 / 输入抖动的事件源改为捕获阶段监听 `beforeinput`（主）+ `input` / 可打印键 `keydown`（兜底），并按「一次编辑只广播一次」跨订阅者去重；光标定位对 contenteditable 走 Selection/Range rect、对 textarea 仍用镜像测量；冒烟测试新增假 DOM 真跑「输入 → 光标 → 粒子/抖动」
+- 0.3.0 适配 DSH 0.2.0：① 设置面板改用 0.2.0 的 settings 表单（按 profile entry id 投影带 `.volatile()` 的 Config + 浏览器侧 `ctx.configForms.get(id)`），移除已被删除的 `settingsScope` / `settingsNamespace` / `installSettingsSection` / `settings.register` + `scope.watch`；② 逐 token 流动改从实时事件 `agent/assistant-stream` 取文本增量（session 事件 `assistant/chunk` 已不存在），SSE 线协议不变；③ 新增构建期 `assertPatchEntryId()`，防止 patch 的 `id` 与设置 namespace 常量漂移
+- 0.2.2 AI 思考过程陪伴：宿主转发会话生命周期事件 + 客户端生命感带 / 逐 token 流动
 - 0.2.1 键盘宽度随输入框自适应（足够显示全部 / 只显键盘 / 过窄隐藏）；修复右侧插件占用时键盘定位偏移；抽取共享配置契约、修复输入抖动误依赖 flame、优化 caret 镜像节点、键盘翻面样式 class 化
 - 0.2.0 设置面板数据驱动（下拉 / 滑杆 / 勾选）、配置精简（删除 pageShake 与 molePoolSize、动物池固定 10 只）、中英文界面跟随 DSH 系统语言；改用 clsx 拼接 class，样式尽量 class 化
 - 0.1.36 新增「翻出频率：关」+ 动物池重做：自动翻动物驻留到池满被顶掉（「同时显示数量」真正生效）；「关」下按键翻出的动物 1.5 秒后自动翻回

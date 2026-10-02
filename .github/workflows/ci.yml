@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   check:
-    name: typecheck & build
+    name: typecheck / build / smoke
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,3 +30,7 @@ jobs:
 
       - name: Build (host + client)
         run: pnpm run build
+
+      # 盯住 dsh 上游契约（settings 表单 / agent/assistant-stream / configForms / ModuleLoader）
+      - name: Smoke (upstream API contracts)
+        run: pnpm run smoke

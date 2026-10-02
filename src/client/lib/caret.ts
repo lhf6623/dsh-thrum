@@ -3,6 +3,9 @@ export interface CaretPosition {
   y: number
 }
 
+/** caret 宿主：旧版 textarea（镜像测量）或 0.2.0 的 contenteditable（选区 rect）。 */
+export type CaretHost = HTMLTextAreaElement | HTMLElement
+
 const PROPS = [
   'direction', 'boxSizing', 'width', 'height', 'overflowX', 'overflowY',
   'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
@@ -34,7 +37,25 @@ function getMirrorSpan(): HTMLSpanElement {
   return mirrorSpan
 }
 
-export function computeCaretPosition(textarea: HTMLTextAreaElement): CaretPosition {
+/**
+ * 计算输入宿主里文字光标的视口坐标。
+ * - textarea：沿用镜像节点测量（selectionEnd/value，与 textarea 排版逐像素对齐）；
+ * - contenteditable（dsh 0.2.0 的 Lexical composer）：读 Selection/Range 的当前 caret rect。
+ * 两者都返回视口坐标（与 getBoundingClientRect 同一坐标系），供全屏 canvas 直接绘制。
+ */
+export function computeCaretPosition(host: CaretHost): CaretPosition {
+  if (isTextControl(host)) return computeTextControlCaret(host)
+  return computeEditableCaret(host)
+}
+
+function isTextControl(host: CaretHost): host is HTMLTextAreaElement {
+  return (
+    typeof (host as HTMLTextAreaElement).value === 'string' &&
+    typeof (host as HTMLTextAreaElement).selectionEnd === 'number'
+  )
+}
+
+function computeTextControlCaret(textarea: HTMLTextAreaElement): CaretPosition {
   const position = textarea.selectionEnd || 0
   const value = textarea.value || ''
 
@@ -68,6 +89,39 @@ export function computeCaretPosition(textarea: HTMLTextAreaElement): CaretPositi
 
   const rect = textarea.getBoundingClientRect()
   return { x: rect.left + left, y: rect.top + top }
+}
+
+function computeEditableCaret(host: HTMLElement): CaretPosition {
+  const doc = host.ownerDocument ?? document
+  const selection = typeof doc.getSelection === 'function' ? doc.getSelection() : null
+  const rect = selectionCaretRect(selection, host)
+  if (rect) return { x: rect.left, y: rect.top }
+  // 选区不可用（未聚焦、选区在别处）：退回归属元素左上角，火焰仍然喷，只是位置保守。
+  const box = host.getBoundingClientRect()
+  return { x: box.left, y: box.top }
+}
+
+/** 当前选区落在 host 内时返回其 caret rect；否则 null。 */
+function selectionCaretRect(
+  selection: Selection | null,
+  host: HTMLElement,
+): { left: number; top: number } | null {
+  if (!selection || selection.rangeCount === 0) return null
+  const range = selection.getRangeAt(0)
+  const start = range.startContainer
+  if (start !== host && !host.contains(start)) return null
+  // 非折叠选区（选中一段再输入/IME 组合）：取最后一个 client rect，即输入将落点所在行。
+  const rects = typeof range.getClientRects === 'function' ? range.getClientRects() : null
+  if (rects && rects.length > 0) {
+    const r = rects[rects.length - 1]
+    if (r && (r.width > 0 || r.height > 0)) return { left: r.left, top: r.top }
+  }
+  // 折叠选区在 Chromium 下 client rects 为空，但 getBoundingClientRect 给出零宽 caret rect。
+  const box = typeof range.getBoundingClientRect === 'function' ? range.getBoundingClientRect() : null
+  if (box && (box.width > 0 || box.height > 0 || box.left !== 0 || box.top !== 0)) {
+    return { left: box.left, top: box.top }
+  }
+  return null
 }
 
 export function disposeCaret(): void {

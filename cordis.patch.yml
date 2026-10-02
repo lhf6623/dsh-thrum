@@ -1,4 +1,10 @@
 # dsh-thrum bundle patch layer — inserts the host row into the Loader tree.
+#
+# ⚠️ 宿主行的 id 就是本插件的 settings namespace（dsh ≥ 0.2.0 按 profile entry id 寻址表单）：
+#    client 用 src/shared/identity.ts 的 SETTINGS_ENTRY_ID（= "thrum"）经 ctx.configForms.get(id)
+#    读写设置。改名会让设置页读不到/写不进（静默退回 localStorage 默认值）；
+#    构建期由 vite.shared.ts 的 assertPatchEntryId() 校验，改这里必须同步改常量。
+#
 # 部署者可在 profile 的 cordis.patch.yml 里覆盖 config（配置式写法，见 cordis-tutorial/05-config）：
 #   - insert:
 #       - id: thrum

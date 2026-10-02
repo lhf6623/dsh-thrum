@@ -3,6 +3,10 @@
 > 作者：designer（requirements） · 供 client-engineer 照做、verifier 核对、reviewer 评审。
 > 目标：把 POC 的「脱离式 8px 小光点」升级为与输入框/overlay 一体的『生命感光带』，
 > 并用 `assistant/chunk` 内容增量驱动『逐 token 流动』。纯客户端视觉升级，**不改 host**。
+>
+> 注（dsh 0.2.0 迁移）：线协议 `assistant/chunk` 保留不变，但它的**上游数据源**已改 ——
+> session 事件 `assistant/chunk` 不存在了，host 改从 `agent/assistant-stream` 取文本增量再包装下发。
+> 见 §2.1；host 侧改动仅此一处（外加 settings 表单 API 迁移）。
 
 ---
 
@@ -87,11 +91,12 @@ POC 已交付（本轮在其上做 A+B，**不推翻**）：
 
 ### 2.1 内容增量来源
 
-- 数据源：客户端 `EventSource.onmessage` 已收到的 `{type:'assistant/chunk', data}` 帧（host 已转发，**无需改 host**）。当前 POC 忽略 `data`，本期必须**读取**它。
+- 数据源：客户端 `EventSource.onmessage` 已收到的 `{type:'assistant/chunk', data}` 帧。当前 POC 忽略 `data`，本期必须**读取**它。
+  - 线协议名 `assistant/chunk` 是**本插件自己的 SSE 帧类型**，不是 dsh 的 session 事件：dsh 0.2.0 已删除 session 事件 `assistant/chunk`（原始 token 流不再入会话日志）。宿主改为订阅实时事件 `agent/assistant-stream`，只取 `frame.type === 'chunk'` 且带文本的增量（`text-delta` / `reasoning-delta`），包装成 `{type:'assistant/chunk', data:{text}}` 下发；客户端契约与实现因此不变。
 - 抽增量 `extractIncrement(data): number`（健壮、绝不为 0）：
   1. 在 `data` 里找字符串字段（候选键：`content` / `text` / `delta` / `message`，或嵌套 `data.data.*` 递归一层）；命中则取该串长度作为增量权重（`chars/4` 视为 1 token 当量，至少 1）。
   2. 没有任何字符串字段时，回退 `+1`（每个 chunk 视为 1 个 token 增量）。
-  - 由于 host 只转发 `{type, data}`、`data` 形状不做保证，**契约要求**：无论 `data` 有无内容，`extractIncrement` ≥ 1，且绝不抛错（内容缺失不阻塞，仍按节奏驱动）。
+  - 由于 host 的 `{type, data}` 以文本增量为准（`data.text`），**契约要求**：无论 `data` 有无内容，`extractIncrement` ≥ 1，且绝不抛错（内容缺失不阻塞，仍按节奏驱动）。
 - **语义**：流式输出越快/越多 → 光带流动越快越亮；停顿 → 流动放缓、发光回落到「等待」的稳态 generating glow（不做硬停）。
 
 ### 2.2 令牌吞吐估计 + 流速/强度映射

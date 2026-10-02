@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import {
+  assertPatchEntryId,
   assertPatchName,
   moduleLoaderWrapPlugin,
   resolve,
@@ -7,6 +8,7 @@ import {
 } from "./vite.shared.ts";
 
 assertPatchName();
+assertPatchEntryId();
 
 // 客户端：Vite lib mode（CJS）+ UnoCSS 生成 + ModuleLoader 包装
 export default defineConfig({

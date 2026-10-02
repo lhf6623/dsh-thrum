@@ -4,17 +4,13 @@ import { playAnswerSound, attachAudioPrime } from "./lib/fx/audio";
 import { shakePage, attachInputShake } from "./lib/fx/shake";
 import { attachFlame } from "./lib/fx/flame";
 import { attachAiPresence, feedAiPresence } from "./lib/fx/motion";
-import { attachSettings, normalizeConfig } from "./lib/config";
+import { attachSettings } from "./lib/config";
 import { installI18n, t } from "./lib/i18n";
-import { pluginName } from "@/shared/identity";
+import { pluginName, SETTINGS_ENTRY_ID } from "@/shared/identity";
 
-export const inject = [
-  "slots",
-  "connection",
-  "remote",
-  "settingsScope",
-  "locale",
-];
+// configForms：0.2.0 的设置传输面（提供者是 dsh-client-ui-settings，取代已删除的 settingsScope）。
+// remote：settings 失效通知随它转发（configForms 的镜像据此刷新），与 ui-theme/ui-chat 同款依赖。
+export const inject = ["slots", "remote", "configForms", "locale"];
 
 export function apply(ctx: any) {
   installI18n(ctx.locale);
@@ -27,22 +23,19 @@ export function apply(ctx: any) {
     ctx.slots.register(
       {
         name: "settings.section",
-        id: "thrum",
+        id: SETTINGS_ENTRY_ID,
         order: 5,
         label: () => t("section"),
       },
       ThrumCard,
     ),
   );
-  // 绑定系统 settings namespace：配置来自 cordis.yml（Config schema）经 settings 服务解析，
-  // 浏览器只读；namespace 未被 api-proxy 白名单暴露时 scope 为 unavailable，读取默认值。
-  ctx.inject(["settingsScope"], (sctx: any) => {
-    const scope = sctx.settingsScope.bind({
-      namespace: pluginName(),
-      decode: (raw: unknown) => normalizeConfig(raw),
-    });
-    attachSettings(scope);
-  });
+  // 绑定插件自己的 settings 表单：0.2.0 的表单按 **profile entry id** 寻址
+  // （见 shared/identity 的 SETTINGS_ENTRY_ID，必须与 cordis.patch.yml 的宿主行 id 一致），
+  // 读取 host 的 Config schema 解析值（schema 默认 < cordis.yml entry < 用户覆盖）。
+  // namespace 未暴露/远端非 loopback 时快照为 unavailable，读取本地 localStorage 默认值。
+  // 写入经表单 set(field, value)，由 settings 文档持久化（不再走 localStorage→scope 的回写协议）。
+  attachSettings(ctx.configForms.get(SETTINGS_ENTRY_ID));
   // 页面级特效（无 React 组件）：火焰 / 输入抖动 / 音频解锁，各自独立，经 ctx.effect 挂载并自动清理
   ctx.effect(attachFlame);
   ctx.effect(attachInputShake);

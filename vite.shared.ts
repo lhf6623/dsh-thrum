@@ -13,7 +13,7 @@ import {
 import { join, basename } from "node:path";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
-import { pluginName } from "./src/shared/identity.ts";
+import { pluginName, SETTINGS_ENTRY_ID } from "./src/shared/identity.ts";
 
 /** 插件身份唯一真源：src/shared/identity（读取 package.json 的 name）。 */
 export const ID = pluginName();
@@ -164,5 +164,30 @@ export function assertPatchName(): void {
         `cordis.patch.yml 的宿主行 name "${m[1]}" 必须等于包名 "${ID}"（与 package.json 同步）`,
       );
     }
+  }
+}
+
+/**
+ * 构建期校验：cordis.patch.yml 必须含一个 id 等于 SETTINGS_ENTRY_ID 的宿主行。
+ *
+ * dsh ≥ 0.2.0 的 settings 表单按 **profile entry id** 寻址：host 的 Config schema 由该
+ * entry 投影，client 用同一个 id 经 ctx.configForms.get(id) 读写设置。id 一旦对不上，
+ * 插件照常显示但设置读不到/写不进（静默降级到 localStorage 默认值），所以在这里拦死。
+ * 由各 vite 配置在启动构建时调用。
+ */
+export function assertPatchEntryId(): void {
+  const patch = readFileSync("cordis.patch.yml", "utf8");
+  const ids = new Set<string>();
+  for (const line of patch.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const m = /^-\s+id:\s*["']?([^"'\s]+)["']?$/.exec(trimmed);
+    if (m) ids.add(m[1]);
+  }
+  if (!ids.has(SETTINGS_ENTRY_ID)) {
+    throw new Error(
+      `cordis.patch.yml 缺少 id "${SETTINGS_ENTRY_ID}" 的宿主行（settings 表单按 entry id 寻址；` +
+        `当前 id：${[...ids].join(", ") || "无"}）`,
+    );
   }
 }
