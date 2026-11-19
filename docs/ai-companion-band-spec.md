@@ -18,7 +18,7 @@ POC 已交付（本轮在其上做 A+B，**不推翻**）：
   `firstTokenMs` 归一化（turnStartAt<=0 或 firstTokenAt 不在其后则 null，上限 30min）；
   `lastPhase` 守卫（仅 phase 变化才重启连续动画）；一次性亮闪节流（FLASH_THROTTLE_MS=160ms）；
   `reducedMotion()` 工具函数；`feedAiPresence()` 喂帧；`subscribeConfig` 实时响应。
-- 配置开关：`aiFeedback: boolean`（默认 true，单一真源 `src/shared/config.ts` + ThrumCard『AI 陪伴』分组 + i18n zh/en）。
+- 配置开关：`aiFeedback: boolean`（默认 true，单一真源 `src/shared/config.ts` + ThrumCard 扁平设置列表的『AI 陪伴』行 + i18n zh/en）。
 - `reduced-motion`：降级为静态微光点。
 - **不破坏**：打字火焰（flame）、输入抖动（shake）、回答提示音（audio）、整页抖动（pageShake）、键盘/鼠标可视化（Overlay）。这些模块**不得**被本期触碰。
 

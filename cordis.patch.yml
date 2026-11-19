@@ -10,10 +10,12 @@
 #       - id: thrum
 #         name: 'dsh-thrum'
 #         config:
-#           enabled: true
+#           enabled: true  # 显示键盘与鼠标
 #           flame: ember   # 打字火焰（off / ember / blue / spark）；off=不显示
 #           shake: light   # 输入抖动（off / light / medium / strong）
+#           pageShakeLevel: off # 整页抖动强度（off / light / medium / strong）
 #           sound: ding    # 回答提示音（off / ding / chime / pop）；off=不播放
+#           aiFeedback: true # AI 陪伴
 #           opacity: 0.6
 - insert:
     - id: thrum

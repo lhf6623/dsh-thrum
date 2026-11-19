@@ -42,11 +42,18 @@ dsh plugin add github:lhf6623/dsh-thrum
 
 在 **设置 → 氛围** 中调整，改动即时生效并保存到本地：
 
-| 分组     | 设置项                                                  |
-| -------- | ------------------------------------------------------- |
-| 键盘外观 | 显示键盘 · 透明度 · 小动物（翻出频率）                  |
-| 打字反馈 | 打字火焰（关/火星/蓝焰/花火） · 输入抖动（关/轻/中/强） |
-| 回答反馈 | 整页抖动强度 · 回答提示音（关/叮/风铃/泡泡）            |
+页面是一份扁平列表，没有分组和总开关，每一项独立生效：
+
+| 设置项           | 取值                          |
+| ---------------- | ----------------------------- |
+| 显示键盘与鼠标   | 开 / 关                       |
+| 键盘透明度       | 10% – 100%                    |
+| 翻出频率         | 关 / 低 / 中 / 高             |
+| 打字火焰         | 关 / 火星 / 蓝焰 / 花火       |
+| 输入抖动         | 关 / 轻 / 中 / 强             |
+| 整页抖动强度     | 关 / 轻 / 中 / 强             |
+| 回答提示音       | 关 / 叮 / 风铃 / 泡泡         |
+| AI 陪伴          | 开 / 关                       |
 
 ### cordis.yml（部署级默认）
 
@@ -56,19 +63,19 @@ dsh plugin add github:lhf6623/dsh-thrum
 - id: thrum
   name: "dsh-thrum"
   config:
-    enabled: true # 键盘外观组总开关
+    enabled: true # 显示键盘与鼠标
     opacity: 0.5 # 键盘透明度
     moleFrequency: medium # 翻出频率（off / low / medium / high）；off=空闲不自动翻、按键翻出后自动翻回
-    feedback: true # 打字反馈组总开关
     flame: ember # 打字火焰（off / ember / blue / spark）；off=不显示
     shake: off # 输入抖动（off / light / medium / strong）
-    response: true # 回答反馈组总开关
     pageShakeLevel: off # 整页抖动强度（含 off=关闭，独立于输入抖动）
     sound: ding # 回答提示音（off / ding / chime / pop）；off=不播放
+    aiFeedback: true # AI 陪伴（生命感光带）
 ```
 
 ## 📝 版本记录
 
+- 0.3.3 设置面板改为扁平列表：去掉「打字反馈 / 回答反馈」两个分组总开关（各子项已有「关」档位），「键盘外观 / AI 陪伴」降级为普通勾选行；配置契约删除 `feedback`、`response` 两个字段
 - 0.3.2 修复回退/删除没有火花 + 空输入框误喷：Lexical 在 keydown 阶段就 `preventDefault` 并自行删除，Backspace/Delete 不会派发 `beforeinput`/`input`，原来的 keydown 兜底又只认可打印字符。现把「真的改文本」的按键补进兜底：Backspace / Delete、Ctrl/Cmd+X/V/Z（剪切/粘贴/撤销重做）；并用 Range 文本投影判断光标方向是否真有可删内容 —— 空输入框、光标已在文本两端都不喷；Shift、方向键、Cmd+A 等非编辑键同样不喷
 - 0.3.1 适配 DSH 0.2.0 的 composer：输入宿主已不是 `<textarea>`，而是 Lexical 的 contenteditable `div[data-composer-input]`。打字火焰 / 输入抖动的事件源改为捕获阶段监听 `beforeinput`（主）+ `input` / 可打印键 `keydown`（兜底），并按「一次编辑只广播一次」跨订阅者去重；光标定位对 contenteditable 走 Selection/Range rect、对 textarea 仍用镜像测量；冒烟测试新增假 DOM 真跑「输入 → 光标 → 粒子/抖动」
 - 0.3.0 适配 DSH 0.2.0：① 设置面板改用 0.2.0 的 settings 表单（按 profile entry id 投影带 `.volatile()` 的 Config + 浏览器侧 `ctx.configForms.get(id)`），移除已被删除的 `settingsScope` / `settingsNamespace` / `installSettingsSection` / `settings.register` + `scope.watch`；② 逐 token 流动改从实时事件 `agent/assistant-stream` 取文本增量（session 事件 `assistant/chunk` 已不存在），SSE 线协议不变；③ 新增构建期 `assertPatchEntryId()`，防止 patch 的 `id` 与设置 namespace 常量漂移

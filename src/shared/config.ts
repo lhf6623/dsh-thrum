@@ -20,10 +20,8 @@ export interface Config {
   enabled: boolean;
   opacity: number;
   moleFrequency: MoleFrequency;
-  feedback: boolean;
   flame: FlameStyle;
   shake: ShakeLevel;
-  response: boolean;
   pageShakeLevel: ShakeLevel;
   sound: SoundStyle;
   aiFeedback: boolean;
@@ -40,7 +38,6 @@ export type ConfigFieldSpec =
       values: readonly MoleFrequency[];
       def: MoleFrequency;
     }
-  | { key: "feedback"; kind: "boolean"; def: boolean }
   | {
       key: "flame";
       kind: "enum";
@@ -53,7 +50,6 @@ export type ConfigFieldSpec =
       values: readonly ShakeLevel[];
       def: ShakeLevel;
     }
-  | { key: "response"; kind: "boolean"; def: boolean }
   | {
       key: "pageShakeLevel";
       kind: "enum";
@@ -77,10 +73,8 @@ export const CONFIG_FIELDS: readonly ConfigFieldSpec[] = [
     values: MOLE_FREQUENCIES,
     def: "medium",
   },
-  { key: "feedback", kind: "boolean", def: true },
   { key: "flame", kind: "enum", values: FLAME_STYLES, def: "ember" },
   { key: "shake", kind: "enum", values: SHAKE_LEVELS, def: "off" },
-  { key: "response", kind: "boolean", def: true },
   { key: "pageShakeLevel", kind: "enum", values: SHAKE_LEVELS, def: "off" },
   { key: "sound", kind: "enum", values: SOUND_STYLES, def: "ding" },
   { key: "aiFeedback", kind: "boolean", def: true },
@@ -95,7 +89,9 @@ export type ConfigFieldName = (typeof CONFIG_FIELD_NAMES)[number];
 // —— 已删除/改名的历史字段（旧 localStorage 兼容）——
 // 这些键曾存在于旧版本配置，现已从契约中移除或改名：
 //   - molePoolSize：旧的「动物池上限」，现固定为 useKeyAnimals 里的 MOLE_POOL_SIZE(10)，无对应字段；
-//   - pageShake：旧版「整页抖动强度」的字段名，现改名/重命名 pageShakeLevel。
+//   - pageShake：旧版「整页抖动强度」的字段名，现改名/重命名 pageShakeLevel；
+//   - feedback / response：旧版「打字反馈」「回答反馈」两组的总开关。扁平列表面板已删掉
+//     分组与总开关（各子项自带「关」档位），归一化时作为未知键安全丢弃。
 // 归一化时显式容忍并丢弃这些键（不写入结果），保证旧 localStorage 数据仍能安全读取而不报错。
 
 // —— 默认值（派生自字段规格，与 schema 默认保持一致）——

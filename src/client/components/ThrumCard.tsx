@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import type { ReactNode } from "react";
 import { clsx } from "clsx";
 import { setConfig, ThrumConfig } from "@/client/lib/config";
@@ -10,33 +9,20 @@ const ROW = clsx(
   "thrum-flex",
   "thrum-items-center",
   "thrum-gap-2",
-  "thrum-py-4",
+  "thrum-py-3",
   "thrum-border-0",
   "thrum-border-b",
   "thrum-border-solid",
   "thrum-border-[var(--dsw-alias-border-l2)]",
 );
 const ROW_LAST = clsx(ROW, "thrum-border-b-0");
-// 主开关标题行：加粗标题 + 左右对称，无底边框（关闭时不留残线；非首组加顶部边框分隔）
-const HEAD_ROW =
-  "thrum-flex thrum-items-center thrum-justify-between thrum-gap-2 thrum-py-4";
-const HEAD_ROW_DIV = clsx(
-  HEAD_ROW,
-  "thrum-border-0",
-  "thrum-border-t",
-  "thrum-border-solid",
-  "thrum-border-[var(--dsw-alias-border-l2)]",
-  "thrum-mt-3",
-);
-// 子项行：左缩进形成层级
-const INDENT = clsx("thrum-pl-6");
+// 依赖项置灰：仍可见、可看，但不随键盘隐藏而消失（避免列表跳动）
+const ROW_DISABLED = "thrum-opacity-60";
 const ROW_TEXT = "thrum-flex thrum-flex-col thrum-flex-1 thrum-gap-1 thrum-min-w-0";
 const TITLE =
   "thrum-text-[14px] thrum-leading-[22px] thrum-text-[var(--dsw-alias-label-primary)]";
 const DESC =
   "thrum-text-[12px] thrum-leading-[18px] thrum-text-[var(--dsw-alias-label-tertiary)]";
-// 主开关行标题：加粗，与子项区分
-const HEAD_TITLE = clsx(TITLE, "thrum-font-semibold");
 const CHECKBOX =
   "thrum-accent-[var(--dsw-alias-brand-primary)] thrum-w-[15px] thrum-h-[15px]";
 const RANGE = "thrum-accent-[var(--dsw-alias-brand-primary)] thrum-w-[140px]";
@@ -56,7 +42,7 @@ const SELECT = clsx(
   "dsh-dark:thrum-border-[rgba(255,255,255,0.2)]",
 );
 
-// —— 数据驱动：每项配置描述一个字段类型，渲染器按类型出控件；文案用 i18n key ——
+// —— 扁平列表：每个字段一行，没有分组标题、没有总开关 ——
 type FieldType = "checkbox" | "range" | "select";
 
 interface FieldDef {
@@ -71,13 +57,8 @@ interface FieldDef {
   suffix?: string;
   // select
   options?: { value: string; labelKey: string }[];
-  last?: boolean;
-}
-
-interface GroupDef {
-  master: keyof ThrumConfig;
-  titleKey: string;
-  fields: FieldDef[];
+  /** 依赖「显示键盘与鼠标」：该开关关闭时本行置灰 */
+  needsKeyboard?: boolean;
 }
 
 const SHAKE_OPTION_KEYS = [
@@ -105,74 +86,61 @@ const SOUND_OPTION_KEYS = [
   { value: "pop", labelKey: "option.pop" },
 ];
 
-const GROUPS: GroupDef[] = [
+const ITEMS: FieldDef[] = [
   {
-    master: "enabled",
-    titleKey: "group.appearance",
-    fields: [
-      {
-        key: "opacity",
-        titleKey: "keyboard.opacity.label",
-        type: "range",
-        min: 0.1,
-        max: 1,
-        step: 0.05,
-        suffix: "%",
-      },
-      {
-        key: "moleFrequency",
-        titleKey: "mole.frequency.label",
-        descKey: "mole.frequency.desc",
-        type: "select",
-        options: MOLE_OPTION_KEYS,
-        last: true,
-      },
-    ],
+    key: "enabled",
+    titleKey: "keyboard.visible.label",
+    descKey: "keyboard.visible.desc",
+    type: "checkbox",
   },
   {
-    master: "feedback",
-    titleKey: "group.typing",
-    fields: [
-      {
-        key: "flame",
-        titleKey: "feedback.flame.label",
-        descKey: "feedback.flame.desc",
-        type: "select",
-        options: FLAME_OPTION_KEYS,
-      },
-      {
-        key: "shake",
-        titleKey: "feedback.shake.label",
-        type: "select",
-        options: SHAKE_OPTION_KEYS,
-        last: true,
-      },
-    ],
+    key: "opacity",
+    titleKey: "keyboard.opacity.label",
+    type: "range",
+    min: 0.1,
+    max: 1,
+    step: 0.05,
+    suffix: "%",
+    needsKeyboard: true,
   },
   {
-    master: "response",
-    titleKey: "group.response",
-    fields: [
-      {
-        key: "pageShakeLevel",
-        titleKey: "response.pageShake.label",
-        type: "select",
-        options: SHAKE_OPTION_KEYS,
-      },
-      {
-        key: "sound",
-        titleKey: "response.sound.label",
-        descKey: "response.sound.desc",
-        type: "select",
-        options: SOUND_OPTION_KEYS,
-        last: true,
-      },
-    ],
+    key: "moleFrequency",
+    titleKey: "mole.frequency.label",
+    descKey: "mole.frequency.desc",
+    type: "select",
+    options: MOLE_OPTION_KEYS,
+    needsKeyboard: true,
   },
   {
-    master: "aiFeedback",
-    titleKey: "group.aiFeedback",
-    fields: [],
+    key: "flame",
+    titleKey: "feedback.flame.label",
+    descKey: "feedback.flame.desc",
+    type: "select",
+    options: FLAME_OPTION_KEYS,
+  },
+  {
+    key: "shake",
+    titleKey: "feedback.shake.label",
+    type: "select",
+    options: SHAKE_OPTION_KEYS,
+  },
+  {
+    key: "pageShakeLevel",
+    titleKey: "response.pageShake.label",
+    type: "select",
+    options: SHAKE_OPTION_KEYS,
+  },
+  {
+    key: "sound",
+    titleKey: "response.sound.label",
+    descKey: "response.sound.desc",
+    type: "select",
+    options: SOUND_OPTION_KEYS,
+  },
+  {
+    key: "aiFeedback",
+    titleKey: "ai.feedback.label",
+    type: "checkbox",
   },
 ];
 
@@ -180,11 +148,11 @@ function Row(props: {
   title: string;
   desc?: string;
   last?: boolean;
-  indent?: boolean;
+  disabled?: boolean;
   children: ReactNode;
 }) {
   return (
-    <div className={clsx(props.last ? ROW_LAST : ROW, props.indent && INDENT)}>
+    <div className={clsx(props.last ? ROW_LAST : ROW, props.disabled && ROW_DISABLED)}>
       <div className={ROW_TEXT}>
         <div className={TITLE}>{props.title}</div>
         {props.desc ? <div className={DESC}>{props.desc}</div> : null}
@@ -197,9 +165,10 @@ function Row(props: {
 function FieldControl(props: {
   field: FieldDef;
   value: ThrumConfig[keyof ThrumConfig];
+  disabled?: boolean;
   onChange: (value: string | number | boolean) => void;
 }) {
-  const { field, value, onChange } = props;
+  const { field, value, disabled, onChange } = props;
   const { t } = useLocale();
   if (field.type === "checkbox") {
     return (
@@ -221,6 +190,7 @@ function FieldControl(props: {
           max={field.max}
           step={field.step}
           value={Number(value)}
+          disabled={disabled}
           onChange={(e) => onChange(parseFloat(e.target.value))}
         />
         <span className={VALUE}>
@@ -234,6 +204,7 @@ function FieldControl(props: {
     <select
       className={SELECT}
       value={String(value)}
+      disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
     >
       {(field.options ?? []).map((o) => (
@@ -245,7 +216,7 @@ function FieldControl(props: {
   );
 }
 
-/** 独立「氛围」设置标签（settings.section）：按 GROUPS 数据渲染，文案随 DSH 语言自动切换。 */
+/** 独立「氛围」设置标签（settings.section）：扁平列表，字段顺序见 ITEMS。 */
 export function ThrumCard() {
   const cfg = useConfig();
   const { t } = useLocale();
@@ -255,39 +226,23 @@ export function ThrumCard() {
 
   return (
     <div className="thrum-flex thrum-flex-col">
-      {GROUPS.map((group, gi) => {
-        const masterOn = Boolean(cfg[group.master]);
+      {ITEMS.map((item, i) => {
+        const disabled = item.needsKeyboard === true && !cfg.enabled;
         return (
-          <Fragment key={group.titleKey}>
-            <div className={gi === 0 ? HEAD_ROW : HEAD_ROW_DIV}>
-              <div className={HEAD_TITLE}>{t(group.titleKey)}</div>
-              <input
-                className={CHECKBOX}
-                type="checkbox"
-                checked={masterOn}
-                onChange={(e) => setField(group.master, e.target.checked)}
-              />
-            </div>
-            {masterOn && (
-              <>
-                {group.fields.map((field) => (
-                  <Row
-                    key={field.key as string}
-                    title={t(field.titleKey)}
-                    desc={field.descKey ? t(field.descKey) : undefined}
-                    last={field.last}
-                    indent
-                  >
-                    <FieldControl
-                      field={field}
-                      value={cfg[field.key]}
-                      onChange={(v) => setField(field.key, v)}
-                    />
-                  </Row>
-                ))}
-              </>
-            )}
-          </Fragment>
+          <Row
+            key={item.key as string}
+            title={t(item.titleKey)}
+            desc={item.descKey ? t(item.descKey) : undefined}
+            last={i === ITEMS.length - 1}
+            disabled={disabled}
+          >
+            <FieldControl
+              field={item}
+              value={cfg[item.key]}
+              disabled={disabled}
+              onChange={(v) => setField(item.key, v)}
+            />
+          </Row>
         );
       })}
     </div>

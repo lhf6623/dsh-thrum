@@ -13,7 +13,9 @@ import { pluginName, SETTINGS_ENTRY_ID } from "@/shared/identity";
 export const inject = ["slots", "remote", "configForms", "locale"];
 
 export function apply(ctx: any) {
-  installI18n(ctx.locale);
+  // 副作用都交给 ctx.effect：模块热替换时先释放旧注册，再跑新模块的 apply。
+  // 尤其 i18n 的 locale 注册（同 namespace+locale 只允许一个所有者）。
+  ctx.effect(() => installI18n(ctx.locale));
   ctx.slots.inject("shell.overlay", () =>
     ctx.slots.register({ name: "shell.overlay", id: pluginName() }, Overlay),
   );
@@ -35,7 +37,7 @@ export function apply(ctx: any) {
   // 读取 host 的 Config schema 解析值（schema 默认 < cordis.yml entry < 用户覆盖）。
   // namespace 未暴露/远端非 loopback 时快照为 unavailable，读取本地 localStorage 默认值。
   // 写入经表单 set(field, value)，由 settings 文档持久化（不再走 localStorage→scope 的回写协议）。
-  attachSettings(ctx.configForms.get(SETTINGS_ENTRY_ID));
+  ctx.effect(() => attachSettings(ctx.configForms.get(SETTINGS_ENTRY_ID)));
   // 页面级特效（无 React 组件）：火焰 / 输入抖动 / 音频解锁，各自独立，经 ctx.effect 挂载并自动清理
   ctx.effect(attachFlame);
   ctx.effect(attachInputShake);

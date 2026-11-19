@@ -18,8 +18,8 @@ function keyframes(amp: number): Keyframe[] {
 
 function triggerShake(card: Element | null): void {
   const cfg = getConfig()
-  // 打字反馈组总开关：关闭（feedback=false）时输入抖动也停；档位与 flame 相互独立
-  if (cfg.feedback === false || cfg.shake === 'off' || reducedMotion()) return
+  // 档位与 flame 相互独立，各自有「关」
+  if (cfg.shake === 'off' || reducedMotion()) return
   const level = cfg.shake
   if (!card || typeof (card as any).animate !== 'function') return
   const amp = level === 'strong' ? 3 : level === 'medium' ? 2 : 1
@@ -30,8 +30,8 @@ function triggerShake(card: Element | null): void {
 
 export function shakePage(): void {
   const cfg = getConfig()
-  // 回答反馈组总开关 + 整页抖动强度（含 off）档位
-  if (cfg.response === false || cfg.pageShakeLevel === 'off' || reducedMotion()) return
+  // 整页抖动强度（含 off）档位
+  if (cfg.pageShakeLevel === 'off' || reducedMotion()) return
   const level = cfg.pageShakeLevel
   const target = document.body
   if (!target || typeof (target as any).animate !== 'function') return

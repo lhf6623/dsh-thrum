@@ -79,8 +79,8 @@ const SOUND_PLAYERS: Record<SoundStyle, SoundPlayer> = {
 
 export function playAnswerSound(): void {
   const cfg = getConfig()
-  // 回答反馈组总开关：关闭（response=false）时提示音也停
-  if (cfg.response === false || cfg.sound === 'off') return
+  // 「关」档位即静音
+  if (cfg.sound === 'off') return
   let ctx: AudioContext | null = null
   try { ctx = ensureAudio() } catch {}
   if (!ctx) return

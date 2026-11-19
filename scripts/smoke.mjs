@@ -165,10 +165,8 @@ check("host: Config 字段全部 volatile（设置表单只投影 volatile 字�
     "enabled",
     "opacity",
     "moleFrequency",
-    "feedback",
     "flame",
     "shake",
-    "response",
     "pageShakeLevel",
     "sound",
     "aiFeedback",
@@ -519,10 +517,8 @@ function bootClient() {
     enabled: true,
     opacity: 0.5,
     moleFrequency: "medium",
-    feedback: true,
     flame: "ember",
     shake: "off",
-    response: true,
     pageShakeLevel: "off",
     sound: "off",
     aiFeedback: false,
@@ -643,7 +639,7 @@ check("client: apply() 用 entry id 绑定 configForms 表单并写回系统设�
 check(
   "client: 0.2.0 composer（contenteditable + beforeinput）喷出打字火焰",
   () => {
-    client.setConfig({ flame: "ember", feedback: true });
+    client.setConfig({ flame: "ember" });
     const { input } = composerDom("div");
     dom.state.range = {
       startContainer: input,
@@ -835,7 +831,7 @@ check("client: 非编辑键（Shift/方向键/全选）不触发兜底火焰", (
 });
 
 check("client: 输入抖动同样走 contenteditable composer", () => {
-  client.setConfig({ flame: "off", feedback: true, shake: "light" });
+  client.setConfig({ flame: "off", shake: "light" });
   const { card, input } = composerDom("div");
   dom.state.range = null;
   fireComposerEvent("beforeinput", input);
@@ -845,8 +841,8 @@ check("client: 输入抖动同样走 contenteditable composer", () => {
   );
 });
 
-check("client: 火焰关闭（flame=off / feedback=false）时不喷", () => {
-  client.setConfig({ flame: "off", feedback: true, shake: "off" });
+check("client: 火焰关闭（flame=off）时不喷", () => {
+  client.setConfig({ flame: "off", shake: "off" });
   const { input } = composerDom("div");
   dom.state.range = null;
   dom.flushRaf(80); // 排空上一测试残留的粒子

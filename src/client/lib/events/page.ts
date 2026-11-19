@@ -1,5 +1,5 @@
 // —— 页面失活事件源：window blur + document 隐藏，向订阅者广播 ——
-// 对应 Cordis 事件模型（dsh-developer-guide「事件系统」）：事件源由一个模块拥有，
+// 对应 Cordis 事件模型：事件源由一个模块拥有，
 // 订阅者互不知晓（emit 语义：纯观察、广播）；退订即效果清理。
 // 切标签页时 blur 与 visibilitychange 常先后触发，订阅者处理函数需幂等。
 

@@ -87,7 +87,7 @@ function initFlame(c: HTMLCanvasElement | null): void {
 
 function spawnFlame(x: number, y: number): void {
   const style = getConfig().flame
-  if (reducedMotion() || getConfig().feedback === false || style === 'off') return
+  if (reducedMotion() || style === 'off') return
   if (!ctx) return
   const spec = FLAME_SPECS[style] ?? FLAME_SPECS.ember
   for (let i = 0; i < spec.count; i++) {

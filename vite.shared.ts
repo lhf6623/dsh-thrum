@@ -9,6 +9,7 @@ import {
   rmSync,
   copyFileSync,
   existsSync,
+  realpathSync,
 } from "node:fs";
 import { join, basename } from "node:path";
 import { homedir } from "node:os";
@@ -65,7 +66,14 @@ const PROFILE_LIB =
 export function syncToProfile(file: string): void {
   try {
     if (!PROFILE_LIB || !existsSync(PROFILE_LIB)) return;
-    copyFileSync(file, join(PROFILE_LIB, basename(file)));
+    const dest = join(PROFILE_LIB, basename(file));
+    // profile 以 symlink 指向本仓库时，源和目标是同一个文件：跳过复制。
+    // copyFile 到自身会再改一次 mtime/ctime，触发 client-hmr 多发一次 rebuilt；
+    // 页面若恰好在这两次 rev 之间加载，拿到的模块 URL 可能已被替换成 404。
+    try {
+      if (realpathSync(dest) === realpathSync(file)) return;
+    } catch {}
+    copyFileSync(file, dest);
     console.log(`[${ID}] synced`, basename(file), "→", PROFILE_LIB);
   } catch {}
 }

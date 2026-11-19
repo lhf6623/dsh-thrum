@@ -57,14 +57,14 @@ let config: ThrumConfig = loadLocal()
 const listeners = new Set<(c: ThrumConfig) => void>()
 
 /** 绑定插件自己的 settings 表单（由 client/index.tsx 在 apply 时调用一次）。 */
-export function attachSettings(s: ConfigFormLike<ThrumConfig>): void {
+export function attachSettings(s: ConfigFormLike<ThrumConfig>): () => void {
   scope = s
   const snap = s.getSnapshot()
   if (snap.status === 'ready' && snap.value) {
     config = normalizeConfig(snap.value)
     saveLocal(config)
   }
-  s.subscribe(() => {
+  const unsubscribe = s.subscribe(() => {
     const cur = s.getSnapshot()
     if (cur.status === 'ready' && cur.value) {
       config = normalizeConfig(cur.value)
@@ -76,6 +76,10 @@ export function attachSettings(s: ConfigFormLike<ThrumConfig>): void {
   // （提供者会在连接建立/失效通知时刷新，订阅已就位所以不会漏掉首帧）。
   const p = (s as any).load?.()
   if (p && typeof p.then === 'function') p.catch(() => {})
+  return () => {
+    unsubscribe()
+    if (scope === s) scope = null
+  }
 }
 
 export function getConfig(): ThrumConfig {

@@ -15,9 +15,8 @@ export interface LocaleService {
 
 const zh: Record<string, string> = {
   section: "氛围",
-  "group.appearance": "键盘外观",
-  "group.typing": "打字反馈",
-  "group.response": "回答反馈",
+  "keyboard.visible.label": "显示键盘与鼠标",
+  "keyboard.visible.desc": "关闭后隐藏键盘、鼠标与方向键浮层",
   "keyboard.opacity.label": "键盘透明度",
   "mole.frequency.label": "翻出频率",
   "mole.frequency.desc": "空闲自动翻出节奏；「关」=不自动翻，按键翻出并自动翻回",
@@ -25,6 +24,7 @@ const zh: Record<string, string> = {
   "feedback.shake.label": "输入抖动",
   "response.pageShake.label": "整页抖动强度",
   "response.sound.label": "回答提示音",
+  "ai.feedback.label": "AI 陪伴",
   "option.off": "关",
   "option.light": "轻",
   "option.medium": "中",
@@ -39,14 +39,12 @@ const zh: Record<string, string> = {
   "option.pop": "泡泡",
   "feedback.flame.desc": "打字光标处喷出的粒子样式；「关」=不显示",
   "response.sound.desc": "回答完成时的提示音；「关」=不播放",
-  "group.aiFeedback": "AI 陪伴",
 };
 
 const en: Record<string, string> = {
   section: "Thrum",
-  "group.appearance": "Keyboard",
-  "group.typing": "Typing Feedback",
-  "group.response": "Answer Feedback",
+  "keyboard.visible.label": "Show Keyboard & Mouse",
+  "keyboard.visible.desc": "Hides the keyboard, mouse and arrow overlay when off",
   "keyboard.opacity.label": "Keyboard Opacity",
   "mole.frequency.label": "Mole Frequency",
   "mole.frequency.desc": "Idle flip cadence; Off = no auto flip, keys flip then return",
@@ -54,6 +52,7 @@ const en: Record<string, string> = {
   "feedback.shake.label": "Input Shake",
   "response.pageShake.label": "Page Shake Level",
   "response.sound.label": "Answer Sound",
+  "ai.feedback.label": "AI Companion",
   "option.off": "Off",
   "option.light": "Light",
   "option.medium": "Medium",
@@ -68,7 +67,6 @@ const en: Record<string, string> = {
   "option.pop": "Pop",
   "feedback.flame.desc": "Particle style at the typing caret; Off = hidden",
   "response.sound.desc": "Sound when an answer finishes; Off = silent",
-  "group.aiFeedback": "AI Companion",
 };
 
 let service: LocaleService | null = null;
@@ -83,12 +81,23 @@ function sync(): void {
   for (const fn of listeners) fn();
 }
 
-/** 注册本插件字典并订阅 locale 服务（客户端入口 apply 时调用一次）。 */
-export function installI18n(s: LocaleService): void {
-  s.register(LOCALE_NS, { zh, en });
+/**
+ * 注册本插件字典并订阅 locale 服务（客户端入口 apply 时调用一次）。
+ *
+ * 必须返回 disposer 并交给 ctx.effect 管理：locale 服务对同一 (ns, locale)
+ * 只允许一个所有者，重复注册会抛错。客户端模块热替换时若旧注册没释放，
+ * 新模块的 apply 会在 register 这一步抛错，整个插件（含设置页）随之加载失败。
+ */
+export function installI18n(s: LocaleService): () => void {
+  const disposeRegister = s.register(LOCALE_NS, { zh, en });
   service = s;
   sync();
-  s.subscribe(sync);
+  const disposeSubscribe = s.subscribe(sync);
+  return () => {
+    disposeSubscribe();
+    disposeRegister();
+    if (service === s) service = null;
+  };
 }
 
 /** 当前语言 id：zh / en。 */
